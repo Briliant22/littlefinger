@@ -1,0 +1,141 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String   @id @default(cuid())
+  name             String
+  email            String   @unique
+  defaultCurrency  String   @default("IDR") @map("default_currency")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  expenses       Expense[]
+  people         Person[]
+  insightReports InsightReport[]
+  receipts       Receipt[]
+
+  @@map("users")
+}
+
+model Category {
+  id   String @id @default(cuid())
+  name String @unique
+  icon String
+
+  expenses Expense[]
+
+  @@map("categories")
+}
+
+model Expense {
+  id         String   @id @default(cuid())
+  userId     String   @map("user_id")
+  categoryId String   @map("category_id")
+  receiptId  String?  @map("receipt_id")
+  amount     Float
+  currency   String   @default("USD")
+  date       DateTime
+  merchant   String
+  source     String   @default("manual")
+  notes      String?
+  receiptItems String?  @map("receipt_items")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user      User       @relation(fields: [userId], references: [id])
+  category  Category   @relation(fields: [categoryId], references: [id])
+  receipt   Receipt?   @relation(fields: [receiptId], references: [id])
+  billSplit BillSplit?
+
+  @@map("expenses")
+}
+
+model Receipt {
+  id               String   @id @default(cuid())
+  userId           String   @map("user_id")
+  imagePath        String   @map("image_path")
+  rawOcrData       String?  @map("raw_ocr_data")
+  confidenceScores String?  @map("confidence_scores")
+  scannedAt        DateTime @default(now()) @map("scanned_at")
+
+  user    User      @relation(fields: [userId], references: [id])
+  expense Expense[]
+
+  @@map("receipts")
+}
+
+model Person {
+  id          String  @id @default(cuid())
+  userId      String  @map("user_id")
+  name        String
+  contactInfo String? @map("contact_info")
+
+  user            User              @relation(fields: [userId], references: [id])
+  billParticipants BillParticipant[]
+
+  @@map("people")
+}
+
+model BillSplit {
+  id          String   @id @default(cuid())
+  expenseId   String   @unique @map("expense_id")
+  method      String
+  totalAmount Float    @map("total_amount")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  expense        Expense               @relation(fields: [expenseId], references: [id])
+  participants   BillParticipant[]
+  itemAssignments BillItemAssignment[]
+
+  @@map("bill_splits")
+}
+
+model BillParticipant {
+  id          String  @id @default(cuid())
+  billSplitId String  @map("bill_split_id")
+  personId    String? @map("person_id")
+  guestName   String? @map("guest_name")
+  amountOwed  Float   @map("amount_owed")
+  paid        Boolean @default(false)
+
+  billSplit     BillSplit             @relation(fields: [billSplitId], references: [id])
+  person        Person?               @relation(fields: [personId], references: [id])
+  itemAssignments BillItemAssignment[]
+
+  @@map("bill_participants")
+}
+
+model BillItemAssignment {
+  id              String  @id @default(cuid())
+  billSplitId     String  @map("bill_split_id")
+  participantId   String  @map("participant_id")
+  itemIndex       Int     @map("item_index")
+  quantity        Int     @default(1)
+  unitPrice       Float   @map("unit_price")
+  amount          Float
+  splitRatio      String? @map("split_ratio")
+
+  billSplit   BillSplit       @relation(fields: [billSplitId], references: [id])
+  participant BillParticipant @relation(fields: [participantId], references: [id])
+
+  @@map("bill_item_assignments")
+}
+
+model InsightReport {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  periodType  String   @map("period_type")
+  periodStart DateTime @map("period_start")
+  periodEnd   DateTime @map("period_end")
+  summaryText String   @map("summary_text")
+  statsJson   String   @map("stats_json")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("insight_reports")
+}
