@@ -186,38 +186,58 @@ export default function ExpensesPage() {
     return (
       <div
         key={expense.id}
-        className="card-surface rounded-xl px-5 py-4 transition-all hover:-translate-y-0.5"
+        className="card-surface rounded-xl px-3.5 py-3 transition-all hover:-translate-y-0.5 sm:px-5 sm:py-4"
       >
-        <div className="flex items-start gap-4">
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted">
+        <div className="flex items-start gap-2.5 sm:gap-4">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted sm:size-10">
             {(() => {
               const Icon = CATEGORY_ICONS[expense.category.icon];
               return Icon ? <Icon size={18} /> : <MoreHorizontal size={18} />;
             })()}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="font-medium truncate">{expense.merchant}</p>
-            <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-xs text-muted-foreground">
-                {expense.category.name}
-              </span>
-              {isSplit && (
-                <>
+            <div className="flex items-start justify-between gap-2 sm:gap-3">
+              <div className="min-w-0">
+                <p className="truncate text-[13px] font-medium sm:text-sm">
+                  {expense.merchant}
+                </p>
+                <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px] text-muted-foreground sm:gap-x-2 sm:text-xs">
+                  <span>{expense.category.name}</span>
                   <span className="text-muted-foreground/40">&middot;</span>
-                  <span className="inline-flex items-center gap-1 text-xs text-primary/80">
-                    <Users size={11} />
-                    {expense.billSplit!.participants.length + 1}
-                  </span>
-                </>
-              )}
-              {expense.notes && (
-                <>
-                  <span className="text-muted-foreground/40">&middot;</span>
-                  <span className="text-xs text-muted-foreground truncate">
-                    {expense.notes}
-                  </span>
-                </>
-              )}
+                  <span>{formatDate(expense.date)}</span>
+                  {isSplit && (
+                    <>
+                      <span className="text-muted-foreground/40">&middot;</span>
+                      <span className="inline-flex items-center gap-1 text-primary/80">
+                        <Users size={11} />
+                        {expense.billSplit!.participants.length + 1}
+                      </span>
+                    </>
+                  )}
+                  {expense.notes && (
+                    <>
+                      <span className="text-muted-foreground/40">&middot;</span>
+                      <span className="min-w-0 max-w-full truncate">{expense.notes}</span>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="shrink-0 text-right">
+                {isSplit ? (
+                  <div className="flex flex-col items-end gap-0.5 sm:flex-row sm:items-baseline sm:gap-1.5">
+                    <span className="font-mono tabular-nums text-[11px] text-muted-foreground line-through sm:text-xs">
+                      {formatCurrency(expense.amount, expense.currency)}
+                    </span>
+                    <span className="font-mono tabular-nums text-[13px] font-medium text-foreground sm:text-sm">
+                      {formatCurrency(netAmount, expense.currency)}
+                    </span>
+                  </div>
+                ) : (
+                  <p className="font-mono tabular-nums text-[13px] font-medium sm:text-sm">
+                    -{formatCurrency(expense.amount, expense.currency)}
+                  </p>
+                )}
+              </div>
             </div>
             {isSplit && expense.billSplit && (
               <div className="mt-2">
@@ -228,25 +248,6 @@ export default function ExpensesPage() {
                 />
               </div>
             )}
-          </div>
-          <div className="text-right shrink-0">
-            <p className={`font-mono tabular-nums font-medium ${isSplit ? "text-muted-foreground" : ""}`}>
-              {isSplit ? (
-                <>
-                  <span className="line-through text-xs mr-1">
-                    {formatCurrency(expense.amount, expense.currency)}
-                  </span>
-                  <span className="text-foreground">
-                    {formatCurrency(netAmount, expense.currency)}
-                  </span>
-                </>
-              ) : (
-                <>-{formatCurrency(expense.amount, expense.currency)}</>
-              )}
-            </p>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {formatDate(expense.date)}
-            </p>
           </div>
           <ExpenseActions
             expense={expense}

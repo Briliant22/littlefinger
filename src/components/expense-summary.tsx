@@ -84,19 +84,10 @@ function groupExpenses(expenses: Expense[], type: PeriodType) {
     .sort((a, b) => b.key.localeCompare(a.key));
 }
 
-function computeOverallTotals(expenses: Expense[]): Record<string, number> {
-  const totals: Record<string, number> = {};
-  for (const e of expenses) {
-    totals[e.currency] = (totals[e.currency] || 0) + e.amount;
-  }
-  return totals;
-}
-
 export function ExpenseSummary({ expenses }: { expenses: Expense[] }) {
   const [period, setPeriod] = useState<PeriodType>("daily");
 
   const grouped = useMemo(() => groupExpenses(expenses, period), [expenses, period]);
-  const overallTotals = useMemo(() => computeOverallTotals(expenses), [expenses]);
 
   return (
     <div className="space-y-5">
@@ -109,17 +100,6 @@ export function ExpenseSummary({ expenses }: { expenses: Expense[] }) {
             <TabsTrigger value="monthly" className="flex-1 sm:flex-none">Monthly</TabsTrigger>
           </TabsList>
         </Tabs>
-      </div>
-
-      <div className="data-card rounded-xl p-4">
-        <p className="data-label">Total spent</p>
-        <div className="mt-1 space-y-0.5">
-          {Object.entries(overallTotals).map(([currency, amount]) => (
-            <p key={currency} className="font-mono tabular-nums text-lg font-medium">
-              {formatCurrency(amount as number, currency)}
-            </p>
-          ))}
-        </div>
       </div>
 
       <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1">

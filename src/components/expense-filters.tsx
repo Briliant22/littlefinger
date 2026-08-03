@@ -52,29 +52,35 @@ export function ExpenseFilters({
         )}
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
-        {/* Date range */}
-        <div className="space-y-1.5">
+      <div className="grid gap-3 sm:grid-cols-2">
+        {/* Date range - spans full width so the two inputs never get squeezed */}
+        <div className="space-y-1.5 sm:col-span-2">
           <label className="text-xs font-medium text-muted-foreground">Date range</label>
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <Calendar size={14} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="date"
-                value={filters.dateFrom}
-                onChange={(e) => onChange({ ...filters, dateFrom: e.target.value })}
-                className="flex h-9 w-full rounded-lg border border-input bg-background pl-8 pr-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-              />
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+            <div className="space-y-1">
+              <span className="block text-xs text-muted-foreground sm:hidden">From</span>
+              <div className="relative">
+                <Calendar size={14} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  type="date"
+                  value={filters.dateFrom}
+                  onChange={(e) => onChange({ ...filters, dateFrom: e.target.value })}
+                  className="flex h-9 w-full rounded-lg border border-input bg-background pl-8 pr-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                />
+              </div>
             </div>
-            <span className="text-xs text-muted-foreground">to</span>
-            <div className="relative flex-1">
-              <Calendar size={14} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="date"
-                value={filters.dateTo}
-                onChange={(e) => onChange({ ...filters, dateTo: e.target.value })}
-                className="flex h-9 w-full rounded-lg border border-input bg-background pl-8 pr-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-              />
+            <span className="hidden text-center text-xs text-muted-foreground sm:block sm:px-1">to</span>
+            <div className="space-y-1">
+              <span className="block text-xs text-muted-foreground sm:hidden">To</span>
+              <div className="relative">
+                <Calendar size={14} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  type="date"
+                  value={filters.dateTo}
+                  onChange={(e) => onChange({ ...filters, dateTo: e.target.value })}
+                  className="flex h-9 w-full rounded-lg border border-input bg-background pl-8 pr-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                />
+              </div>
             </div>
           </div>
         </div>

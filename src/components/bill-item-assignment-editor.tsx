@@ -287,33 +287,78 @@ export function BillItemAssignmentEditor({
                   const weight = pConfigs[pid]?.splitRatio || "1";
                   const pct = getItemPct(itemIndex, pid);
                   return (
-                    <div key={pid} className="flex flex-wrap items-center gap-1.5 rounded-lg bg-muted/50 px-2.5 py-1.5 sm:flex-nowrap">
-                      <span className="text-xs font-medium truncate min-w-0 flex-1">{p.label}</span>
-                      {config?.useRatios && (
-                        <div className="flex items-center gap-1">
-                          <input
-                            type="number"
-                            min="1"
-                            value={weight}
-                            onChange={(e) => setWeight(itemIndex, pid, e.target.value)}
-                            className="w-12 rounded-md border border-input bg-background px-1.5 py-0.5 text-xs text-center font-mono focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                          />
-                          {pct && (
-                            <span className="text-[10px] text-muted-foreground w-8 text-right">({pct})</span>
+                    <div key={pid} className="rounded-lg bg-muted/50 px-2.5 py-1.5">
+                      {config?.useRatios ? (
+                        <>
+                          {/* Mobile: stacked rows */}
+                          <div className="flex flex-col gap-1 sm:hidden">
+                            <div className="flex min-w-0 items-center gap-2">
+                              <span className="min-w-0 flex-1 truncate text-xs font-medium">{p.label}</span>
+                              <div className="flex shrink-0 items-center gap-1">
+                                <input
+                                  type="number"
+                                  min="1"
+                                  value={weight}
+                                  onChange={(e) => setWeight(itemIndex, pid, e.target.value)}
+                                  className="w-12 shrink-0 rounded-md border border-input bg-background px-1.5 py-0.5 text-xs text-center font-mono focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                                />
+                              </div>
+                              {!config?.splitEvenly && (
+                                <button
+                                  type="button"
+                                  onClick={() => removeParticipantFromItem(itemIndex, pid)}
+                                  className="ml-auto flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground hover:text-destructive"
+                                >
+                                  <X size={11} />
+                                </button>
+                              )}
+                            </div>
+                            <div className="flex shrink-0 items-center justify-end gap-2">
+                              {pct && <span className="text-[10px] text-muted-foreground">({pct})</span>}
+                              <span className="font-mono tabular-nums text-xs">{getItemShare(itemIndex, pid)}</span>
+                            </div>
+                          </div>
+                          {/* Desktop: single row with name left, controls right */}
+                          <div className="hidden items-center justify-between gap-2 sm:flex">
+                            <span className="min-w-0 truncate text-xs font-medium">{p.label}</span>
+                            <div className="flex shrink-0 items-center gap-2">
+                              <div className="flex items-center gap-1">
+                                <input
+                                  type="number"
+                                  min="1"
+                                  value={weight}
+                                  onChange={(e) => setWeight(itemIndex, pid, e.target.value)}
+                                  className="w-12 shrink-0 rounded-md border border-input bg-background px-1.5 py-0.5 text-xs text-center font-mono focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                                />
+                                {pct && <span className="shrink-0 text-[10px] text-muted-foreground">({pct})</span>}
+                              </div>
+                              <span className="font-mono tabular-nums text-xs">{getItemShare(itemIndex, pid)}</span>
+                              {!config?.splitEvenly && (
+                                <button
+                                  type="button"
+                                  onClick={() => removeParticipantFromItem(itemIndex, pid)}
+                                  className="flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground hover:text-destructive"
+                                >
+                                  <X size={11} />
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <span className="min-w-0 flex-1 truncate text-xs font-medium">{p.label}</span>
+                          <span className="shrink-0 font-mono tabular-nums text-xs">{getItemShare(itemIndex, pid)}</span>
+                          {!config?.splitEvenly && (
+                            <button
+                              type="button"
+                              onClick={() => removeParticipantFromItem(itemIndex, pid)}
+                              className="flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground hover:text-destructive"
+                            >
+                              <X size={11} />
+                            </button>
                           )}
                         </div>
-                      )}
-                      <span className="font-mono tabular-nums text-xs ml-auto">
-                        {getItemShare(itemIndex, pid)}
-                      </span>
-                      {!config?.splitEvenly && (
-                        <button
-                          type="button"
-                          onClick={() => removeParticipantFromItem(itemIndex, pid)}
-                          className="flex size-5 items-center justify-center rounded text-muted-foreground hover:text-destructive"
-                        >
-                          <X size={11} />
-                        </button>
                       )}
                     </div>
                   );
@@ -353,8 +398,9 @@ export function BillItemAssignmentEditor({
                     </button>
                     <button
                       type="button"
+                      disabled={assignedIds.length <= 1}
                       onClick={() => !config?.useRatios && toggleItemRatio(itemIndex)}
-                      className={`px-2.5 py-1 text-[10px] font-medium rounded-r-full border transition-colors ${
+                      className={`px-2.5 py-1 text-[10px] font-medium rounded-r-full border transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
                         config?.useRatios
                           ? "border-primary bg-primary/10 text-primary"
                           : "border-input bg-muted text-muted-foreground"

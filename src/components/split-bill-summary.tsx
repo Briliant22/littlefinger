@@ -34,8 +34,8 @@ export function SplitBillSummary({
 
   return (
     <div className="space-y-1.5">
-      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-        <Users size={12} />
+      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground sm:text-xs">
+        <Users size={11} />
         <span>Split ({participants.length})</span>
         <span className="text-muted-foreground/50">&middot;</span>
         <span className="capitalize">{split.method}</span>
@@ -45,7 +45,7 @@ export function SplitBillSummary({
             <button
               type="button"
               onClick={onViewDetails}
-              className="inline-flex items-center gap-0.5 text-xs text-primary hover:underline"
+              className="inline-flex items-center gap-0.5 text-primary hover:underline"
             >
               Details <ChevronRight size={10} />
             </button>
@@ -72,11 +72,11 @@ export function SplitBillSummary({
                   <Circle size={12} />
                 )}
               </button>
-              <span className={`text-xs truncate ${p.paid ? "line-through text-muted-foreground/60" : ""}`}>
+              <span className={`truncate text-[11px] sm:text-xs ${p.paid ? "line-through text-muted-foreground/60" : ""}`}>
                 {p.person?.name || p.guestName || "Unknown"}
               </span>
             </div>
-            <span className={`font-mono tabular-nums text-xs shrink-0 ${
+            <span className={`font-mono tabular-nums text-[11px] shrink-0 sm:text-xs ${
               p.paid ? "text-muted-foreground/60 line-through" : ""
             }`}>
               {formatCurrency(p.amountOwed, currency)}

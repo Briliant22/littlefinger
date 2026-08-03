@@ -468,27 +468,27 @@ export function SplitBillDialog({
             </div>
           )}
 
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             <input
               type="text"
               value={guestName}
               onChange={(e) => setGuestName(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter") addGuest(); }}
               placeholder="Add guest by name..."
-              className="flex h-9 flex-1 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+              className="min-h-10 w-full flex-1 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
             />
-            <Button variant="outline" size="sm" onClick={addGuest} disabled={!guestName.trim()}>
+            <Button variant="outline" size="sm" onClick={addGuest} disabled={!guestName.trim()} className="shrink-0">
               Add
             </Button>
           </div>
 
           {error && <p className="text-sm text-destructive">{error}</p>}
 
-          <div className="flex gap-3 pt-2">
-            <Button variant="outline" onClick={onClose} className="flex-1">
+          <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+            <Button variant="outline" onClick={onClose} className="flex-1 min-h-11 sm:min-h-8">
               Cancel
             </Button>
-            <Button onClick={handleProceedToMethod} disabled={!canProceedToMethod()} className="flex-1">
+            <Button onClick={handleProceedToMethod} disabled={!canProceedToMethod()} className="flex-1 min-h-11 sm:min-h-8">
               Choose Method
               <ChevronRight size={14} />
             </Button>
