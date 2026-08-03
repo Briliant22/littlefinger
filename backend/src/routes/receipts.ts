@@ -39,7 +39,24 @@ async function getDefaultUserId(): Promise<string> {
   return user.id;
 }
 
-async function scanWithLLM(imageBase64: string, mimeType: string): Promise<Record<string, unknown>> {
+const SCAN_MODELS = [
+  "openrouter/free",
+  "nvidia/nemotron-nano-12b-v2-vl:free",
+  "google/gemma-4-26b-a4b-it:free",
+];
+
+function isRetryableScanError(message: string): boolean {
+  return (
+    message.includes("LLM response contains no JSON") ||
+    message.includes("No content from LLM")
+  );
+}
+
+async function scanWithLLM(
+  imageBase64: string,
+  mimeType: string,
+  model = "openrouter/free"
+): Promise<Record<string, unknown>> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
     throw new Error("OPENROUTER_API_KEY is not configured");
@@ -55,7 +72,7 @@ async function scanWithLLM(imageBase64: string, mimeType: string): Promise<Recor
         "HTTP-Referer": "https://littlefinger.app",
       },
       body: JSON.stringify({
-        model: "openrouter/free",
+        model,
         messages: [
           {
             role: "user",
@@ -135,7 +152,7 @@ Confidence should reflect how certain you are about each item's accuracy. If you
   const expectedTotal = itemsTotal + taxAmount;
   const roundingAdjustment = (parsed.total as number) - expectedTotal;
 
-  return { ...parsed, _model: "openrouter/free", roundingAdjustment };
+  return { ...parsed, _model: model, roundingAdjustment };
 }
 
 router.post("/scan", upload.single("receipt"), async (req, res) => {
@@ -152,11 +169,22 @@ router.post("/scan", upload.single("receipt"), async (req, res) => {
 
     const userId = await getDefaultUserId();
 
-    let scanResult: Record<string, unknown>;
-    try {
-      scanResult = await scanWithLLM(base64, mimeType);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Failed to scan receipt";
+    let scanResult: Record<string, unknown> | undefined;
+    let lastError: unknown;
+    for (const model of SCAN_MODELS) {
+      try {
+        scanResult = await scanWithLLM(base64, mimeType, model);
+        break;
+      } catch (err) {
+        lastError = err;
+        const msg = err instanceof Error ? err.message : "Failed to scan receipt";
+        if (!isRetryableScanError(msg)) break;
+      }
+    }
+
+    if (!scanResult) {
+      const msg =
+        lastError instanceof Error ? lastError.message : "Failed to scan receipt";
       await prisma.receipt.create({
         data: {
           userId,
