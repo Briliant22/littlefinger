@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Sidebar } from "@/components/sidebar";
 import { MobileNav } from "@/components/mobile-nav";
+import { PageTransition } from "@/components/page-transition";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -14,7 +15,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen">
       <Sidebar />
       <MobileNav />
-      <main className="min-w-0 flex-1 pb-20 md:pb-0">{children}</main>
+      <main className="min-w-0 flex-1 pb-20 md:pb-0">
+        <PageTransition>{children}</PageTransition>
+      </main>
     </div>
   );
 }
