@@ -188,16 +188,6 @@ export default function DebtsPage() {
           </div>
         </div>
 
-        <div className="mb-6">
-          <Tabs value={filter} onValueChange={(v) => setFilter(v as Filter)}>
-            <TabsList className="w-full sm:w-auto">
-              <TabsTrigger value="outstanding" className="flex-1 sm:flex-none">Outstanding</TabsTrigger>
-              <TabsTrigger value="paid" className="flex-1 sm:flex-none">Paid</TabsTrigger>
-              <TabsTrigger value="all" className="flex-1 sm:flex-none">All</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-
         <div className="mb-6 lg:hidden">
           <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)}>
             <TabsList className="w-full">
@@ -208,7 +198,16 @@ export default function DebtsPage() {
         </div>
 
         <div className="flex flex-col gap-8 lg:flex-row">
-          <div className={`${viewMode === "persons" ? "hidden" : ""} lg:block lg:w-3/5`}>
+          <div className={`${viewMode === "persons" ? "hidden" : ""} animate-slide-in-left lg:block lg:w-3/5`}>
+            <div className={`mb-4 lg:block ${viewMode === "persons" ? "hidden" : ""}`}>
+              <Tabs value={filter} onValueChange={(v) => setFilter(v as Filter)}>
+                <TabsList className="w-full sm:w-auto">
+                  <TabsTrigger value="outstanding" className="flex-1 sm:flex-none">Outstanding</TabsTrigger>
+                  <TabsTrigger value="paid" className="flex-1 sm:flex-none">Paid</TabsTrigger>
+                  <TabsTrigger value="all" className="flex-1 sm:flex-none">All</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
             {loading ? (
               <div className="space-y-3">
                 {Array.from({ length: 4 }).map((_, i) => (
@@ -318,7 +317,7 @@ export default function DebtsPage() {
             )}
           </div>
 
-          <div className={`${viewMode === "debts" ? "hidden" : ""} lg:block lg:w-2/5`}>
+          <div className={`${viewMode === "debts" ? "hidden" : ""} animate-slide-in-right lg:block lg:w-2/5`}>
             <div className="lg:sticky lg:top-8">
               <div className="space-y-5">
                 <h2 className="text-lg font-semibold">Outstanding by person</h2>
@@ -352,43 +351,47 @@ export default function DebtsPage() {
                           />
                         </button>
 
-                        {expandedPerson === p.name && (
-                          <div className="mt-3 space-y-3 border-t border-border pt-3">
-                            <div className="space-y-2">
-                              {p.debts.map((debt) => (
-                                <div key={debt.id} className="flex items-center justify-between gap-2">
-                                  <div className="min-w-0">
-                                    <p className="truncate text-sm font-medium">
-                                      {debt.source === "bill" ? debt.merchant : (debt.note || "Manual debt")}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground">
-                                      {formatDate(debt.createdAt)}
-                                      <span className="text-muted-foreground/40">&middot;</span>
-                                      {debt.source === "bill" ? "Bill split" : "Manual"}
+                        <div
+                          className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${expandedPerson === p.name ? "[grid-template-rows:1fr]" : "[grid-template-rows:0fr]"}`}
+                        >
+                          <div className="min-h-0 overflow-hidden">
+                            <div className="mt-3 space-y-3 border-t border-border pt-3">
+                              <div className="space-y-2">
+                                {p.debts.map((debt) => (
+                                  <div key={debt.id} className="flex items-center justify-between gap-2">
+                                    <div className="min-w-0">
+                                      <p className="truncate text-sm font-medium">
+                                        {debt.source === "bill" ? debt.merchant : (debt.note || "Manual debt")}
+                                      </p>
+                                      <p className="text-xs text-muted-foreground">
+                                        {formatDate(debt.createdAt)}
+                                        <span className="text-muted-foreground/40">&middot;</span>
+                                        {debt.source === "bill" ? "Bill split" : "Manual"}
+                                      </p>
+                                    </div>
+                                    <p className="shrink-0 font-mono tabular-nums text-sm font-medium">
+                                      {formatCurrency(debt.amount, debt.currency)}
                                     </p>
                                   </div>
-                                  <p className="shrink-0 font-mono tabular-nums text-sm font-medium">
-                                    {formatCurrency(debt.amount, debt.currency)}
-                                  </p>
-                                </div>
-                              ))}
+                                ))}
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                className="w-full"
+                                onClick={() => resolveAllPaid(p.debts)}
+                                disabled={resolvingAll}
+                              >
+                                {resolvingAll ? (
+                                  <Loader2 size={14} className="animate-spin" />
+                                ) : (
+                                  <Check size={14} className="text-primary" />
+                                )}
+                                Mark all paid
+                              </Button>
                             </div>
-                            <Button
-                              size="sm"
-                              variant="secondary"
-                              className="w-full"
-                              onClick={() => resolveAllPaid(p.debts)}
-                              disabled={resolvingAll}
-                            >
-                              {resolvingAll ? (
-                                <Loader2 size={14} className="animate-spin" />
-                              ) : (
-                                <Check size={14} className="text-primary" />
-                              )}
-                              Mark all paid
-                            </Button>
                           </div>
-                        )}
+                        </div>
                       </div>
                     ))
                   )}

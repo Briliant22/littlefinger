@@ -331,7 +331,7 @@ export default function ExpensesPage() {
             </div>
 
             <div className="flex flex-col gap-8 lg:flex-row">
-              <div className={`${viewMode === "summary" ? "hidden" : ""} lg:block lg:w-3/5`}>
+              <div className={`${viewMode === "summary" ? "hidden" : ""} animate-slide-in-left lg:block lg:w-3/5`}>
                 {loading ? (
                   <div className="space-y-3">
                     {Array.from({ length: 5 }).map((_, i) => (
@@ -371,7 +371,7 @@ export default function ExpensesPage() {
                 )}
               </div>
 
-              <div className={`${viewMode === "expenses" ? "hidden" : ""} lg:block lg:w-2/5`}>
+              <div className={`${viewMode === "expenses" ? "hidden" : ""} animate-slide-in-right lg:block lg:w-2/5`}>
                 <div className="lg:sticky lg:top-8">
                   <ExpenseSummary
                     expenses={adjustedExpenses.map((e) => {

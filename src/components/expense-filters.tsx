@@ -40,7 +40,7 @@ export function ExpenseFilters({
   }
 
   return (
-    <div className="space-y-3 rounded-xl border bg-card p-4">
+    <div className="rounded-xl border bg-card p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <p className="text-sm font-medium">Filters</p>
@@ -66,8 +66,11 @@ export function ExpenseFilters({
         )}
       </div>
 
-      {!isCollapsed && (
-        <div className="grid gap-3 sm:grid-cols-2">
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${isCollapsed ? "[grid-template-rows:0fr]" : "mt-3 [grid-template-rows:1fr]"}`}
+      >
+        <div className="min-h-0 overflow-hidden">
+          <div className="grid gap-3 sm:grid-cols-2">
         {/* Date range - spans full width so the two inputs never get squeezed */}
         <div className="space-y-1.5 sm:col-span-2">
           <label className="text-xs font-medium text-muted-foreground">Date range</label>
@@ -126,7 +129,8 @@ export function ExpenseFilters({
           </div>
         </div>
       </div>
-      )}
+        </div>
+      </div>
     </div>
   );
 }

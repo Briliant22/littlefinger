@@ -183,7 +183,7 @@ Use a clean centered layout with generous whitespace:
 
 Pages use a single-column or simple sidebar layout. The sticky command rail from the previous design is removed — navigation is handled via a top header or persistent sidebar.
 
-Mobile: single-column stacked layout with no sticky elements.
+Mobile: single-column stacked layout with no sticky elements, except a deliberate mobile-first fixed bottom tab bar for thumb-friendly navigation.
 
 ---
 
