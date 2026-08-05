@@ -3,9 +3,9 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import {
   Receipt, ArrowLeft, Table, Users,
-  ShoppingCart, Utensils, Car, Zap, Film, ShoppingBag, Heart, Home, Plane, Repeat, MoreHorizontal, HandCoins,
+  ShoppingCart, Utensils, Car, Zap, Film, ShoppingBag, Heart, Home, Plane, Repeat, MoreHorizontal,
 } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ExpenseForm } from "@/components/expense-form";
 import { BulkExpenseForm } from "@/components/bulk-expense-form";
@@ -83,6 +83,7 @@ function getUserNetAmount(expense: Expense): number {
 }
 
 export default function ExpensesPage() {
+  const router = useRouter();
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -280,12 +281,14 @@ export default function ExpensesPage() {
           <>
             <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-4">
-                <Link
-                  href="/"
+                <button
+                  type="button"
+                  onClick={() => router.back()}
                   className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  aria-label="Go back"
                 >
                   <ArrowLeft size={16} />
-                </Link>
+                </button>
                 <div>
                   <h1 className="text-2xl font-semibold">Expenses</h1>
                   <p className="text-sm text-muted-foreground mt-0.5">
@@ -294,10 +297,6 @@ export default function ExpensesPage() {
                 </div>
               </div>
               <div className="flex gap-2 self-start sm:self-auto">
-                <Button variant="outline" nativeButton={false} render={<Link href="/debts" />}>
-                  <HandCoins size={16} />
-                  <span className="hidden sm:inline">IOUs</span>
-                </Button>
                 <Button variant="outline" onClick={() => setManagePeopleOpen(true)}>
                   <Users size={16} />
                   <span className="hidden sm:inline">People</span>

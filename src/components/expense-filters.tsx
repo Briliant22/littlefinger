@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Calendar, Search, ChevronDown, ChevronUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { Button } from "@/components/ui/button";
 import type { Category } from "@/lib/api";
 
 export interface Filters {
@@ -34,10 +33,7 @@ export function ExpenseFilters({
     filters.dateFrom || filters.dateTo || filters.categoryIds.length > 0 || filters.merchantQuery;
 
   const [collapsed, setCollapsed] = useState(false);
-
-  useEffect(() => {
-    if (hasActiveFilters) setCollapsed(false);
-  }, [hasActiveFilters]);
+  const isCollapsed = collapsed && !hasActiveFilters;
 
   function clearAll() {
     onChange(defaultFilters);
@@ -70,7 +66,7 @@ export function ExpenseFilters({
         )}
       </div>
 
-      {!collapsed && (
+      {!isCollapsed && (
         <div className="grid gap-3 sm:grid-cols-2">
         {/* Date range - spans full width so the two inputs never get squeezed */}
         <div className="space-y-1.5 sm:col-span-2">
