@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Calendar, Search, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Calendar, Search, ChevronDown, ChevronUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,12 @@ export function ExpenseFilters({
   const hasActiveFilters =
     filters.dateFrom || filters.dateTo || filters.categoryIds.length > 0 || filters.merchantQuery;
 
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    if (hasActiveFilters) setCollapsed(false);
+  }, [hasActiveFilters]);
+
   function clearAll() {
     onChange(defaultFilters);
   }
@@ -40,7 +46,19 @@ export function ExpenseFilters({
   return (
     <div className="space-y-3 rounded-xl border bg-card p-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-medium">Filters</p>
+        <div className="flex items-center gap-1.5">
+          <p className="text-sm font-medium">Filters</p>
+          {!hasActiveFilters && (
+            <button
+              type="button"
+              onClick={() => setCollapsed((c) => !c)}
+              className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              aria-label={collapsed ? "Expand filters" : "Collapse filters"}
+            >
+              {collapsed ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
+            </button>
+          )}
+        </div>
         {hasActiveFilters && (
           <button
             type="button"
@@ -52,7 +70,8 @@ export function ExpenseFilters({
         )}
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      {!collapsed && (
+        <div className="grid gap-3 sm:grid-cols-2">
         {/* Date range - spans full width so the two inputs never get squeezed */}
         <div className="space-y-1.5 sm:col-span-2">
           <label className="text-xs font-medium text-muted-foreground">Date range</label>
@@ -111,6 +130,7 @@ export function ExpenseFilters({
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }

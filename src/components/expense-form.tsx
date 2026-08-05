@@ -29,6 +29,7 @@ export function ExpenseForm({
   onExpenseCreated?: (expense: Expense) => void;
 }) {
   const isEdit = !!expense;
+  const hasSplit = isEdit && !!expense?.billSplit;
   const [open, setOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -149,10 +150,14 @@ export function ExpenseForm({
                   placeholder="0.00"
                   defaultValue={expense?.amount || ""}
                   required
+                  disabled={hasSplit}
                   className="pl-8 font-mono tabular-nums"
                   autoFocus
                 />
               </div>
+              <p className="text-xs text-muted-foreground">
+                {hasSplit && "Amount is set by the bill split"}
+              </p>
             </div>
             <div className="w-24 space-y-2 sm:w-32">
               <Label htmlFor="currency">Currency</Label>
@@ -162,6 +167,7 @@ export function ExpenseForm({
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
                 required
+                disabled={hasSplit}
               >
                 {CURRENCIES.map((c) => (
                   <option key={c.code} value={c.code}>

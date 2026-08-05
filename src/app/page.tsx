@@ -19,6 +19,12 @@ export default function Home() {
             >
               Go to Expenses
             </Link>
+            <Link
+              href="/debts"
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-card px-4 text-sm font-medium text-foreground transition-all hover:bg-muted active:scale-[0.97]"
+            >
+              I Owe You
+            </Link>
             <span className="accent-strip rounded-full px-4 py-1.5 text-xs font-medium">
               Dashboard coming soon
             </span>

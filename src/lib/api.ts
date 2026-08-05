@@ -332,3 +332,81 @@ export async function fetchReceipt(receiptId: string): Promise<{
   if (!res.ok) throw new Error("Failed to fetch receipt");
   return res.json();
 }
+
+export interface Debt {
+  id: string;
+  source: "bill" | "manual";
+  personId: string | null;
+  guestName: string | null;
+  personName: string;
+  amount: number;
+  currency: string;
+  paid: boolean;
+  createdAt: string;
+  billSplitId?: string;
+  expenseId?: string;
+  merchant?: string;
+  note?: string | null;
+}
+
+export async function fetchDebts(): Promise<Debt[]> {
+  const res = await fetch(`${API_URL}/api/debts`);
+  if (!res.ok) throw new Error("Failed to fetch debts");
+  return res.json();
+}
+
+export async function createDebt(data: {
+  personId?: string;
+  guestName?: string;
+  amount: number;
+  currency: string;
+  note?: string;
+}): Promise<Debt> {
+  const res = await fetch(`${API_URL}/api/debts`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: "Failed to create debt" }));
+    throw new Error(err.error);
+  }
+  return res.json();
+}
+
+export async function updateDebt(
+  id: string,
+  data: { personId?: string; guestName?: string; amount?: number; currency?: string; note?: string }
+): Promise<Debt> {
+  const res = await fetch(`${API_URL}/api/debts/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: "Failed to update debt" }));
+    throw new Error(err.error);
+  }
+  return res.json();
+}
+
+export async function toggleManualDebtPaid(id: string): Promise<Debt> {
+  const res = await fetch(`${API_URL}/api/debts/${id}/pay`, {
+    method: "PATCH",
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: "Failed to toggle debt payment" }));
+    throw new Error(err.error);
+  }
+  return res.json();
+}
+
+export async function deleteDebt(id: string): Promise<void> {
+  const res = await fetch(`${API_URL}/api/debts/${id}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: "Failed to delete debt" }));
+    throw new Error(err.error);
+  }
+}

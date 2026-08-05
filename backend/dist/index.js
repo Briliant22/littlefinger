@@ -17,6 +17,7 @@ const user_1 = __importDefault(require("./routes/user"));
 const people_1 = __importDefault(require("./routes/people"));
 const bill_splits_1 = __importDefault(require("./routes/bill-splits"));
 const receipts_1 = __importDefault(require("./routes/receipts"));
+const debts_1 = __importDefault(require("./routes/debts"));
 const app = (0, express_1.default)();
 const port = process.env.PORT || 4000;
 app.use((0, cors_1.default)());
@@ -31,6 +32,7 @@ app.use("/api/user", user_1.default);
 app.use("/api/people", people_1.default);
 app.use("/api/bill-splits", bill_splits_1.default);
 app.use("/api/receipts", receipts_1.default);
+app.use("/api/debts", debts_1.default);
 app.listen(port, () => {
     const hasApiKey = process.env.OPENROUTER_API_KEY && process.env.OPENROUTER_API_KEY.length > 0;
     console.log(`Server running on http://localhost:${port}`);

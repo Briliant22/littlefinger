@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import {
-  Users, Plus, Trash2, Loader2, Check, ArrowLeft, ChevronRight, ChevronLeft,
+  Users, Trash2, Loader2, Check, ArrowLeft, ChevronRight, ChevronLeft,
   Equal, Percent, Settings, List, AlertCircle,
 } from "lucide-react";
 import { Dialog, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
@@ -19,6 +19,8 @@ import {
 } from "@/lib/api";
 import { formatCurrency } from "@/lib/currency";
 import { BillItemAssignmentEditor, type ItemConfig } from "@/components/bill-item-assignment-editor";
+import { ContactSearch } from "@/components/contact-search";
+import { NewContactDialog } from "@/components/new-contact-dialog";
 
 interface ParticipantInput {
   id: string;
@@ -73,11 +75,13 @@ export function SplitBillDialog({
   const [methodAmounts, setMethodAmounts] = useState<number[]>([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [guestName, setGuestName] = useState("");
   const [existingAssignments, setExistingAssignments] = useState<BillItemAssignment[]>([]);
   const [itemConfigs, setItemConfigs] = useState<Record<number, ItemConfig>>({});
   const [loadingEdit, setLoadingEdit] = useState(false);
   const savingRef = useRef(false);
+  const [contactQuery, setContactQuery] = useState("");
+  const [newContactOpen, setNewContactOpen] = useState(false);
+  const [newContactName, setNewContactName] = useState("");
 
   useEffect(() => {
     if (open) {
@@ -149,7 +153,8 @@ export function SplitBillDialog({
         setParticipants([]);
         setMethodAmounts([]);
         setError(null);
-        setGuestName("");
+        setContactQuery("");
+        setNewContactOpen(false);
         setItemConfigs({});
         setExistingAssignments([]);
       }
@@ -179,16 +184,19 @@ export function SplitBillDialog({
     });
   }
 
-  function addGuest() {
-    const name = guestName.trim();
-    if (!name) return;
-    const exists = participants.some((p) => !p.personId && p.guestName === name);
-    if (exists) return;
-    setParticipants((prev) => [
-      ...prev,
-      { id: crypto.randomUUID(), personId: null, guestName: name, amountOwed: 0 },
-    ]);
-    setGuestName("");
+  function handleSelectContact(person: Person) {
+    addParticipant(person);
+    setContactQuery("");
+  }
+
+  function handleAddNewContact(name: string) {
+    setNewContactName(name);
+    setNewContactOpen(true);
+  }
+
+  function handleNewContactCreated(person: Person) {
+    setNewContactOpen(false);
+    addParticipant(person);
   }
 
   function removeParticipant(id: string) {
@@ -388,10 +396,6 @@ export function SplitBillDialog({
     }
   }
 
-  const unselectedPeople = people.filter(
-    (pe) => !participants.some((p) => p.personId === pe.id)
-  );
-
   if (loadingEdit) {
     return (
       <Dialog open={open} onClose={onClose}>
@@ -449,38 +453,13 @@ export function SplitBillDialog({
             )}
           </div>
 
-          {unselectedPeople.length > 0 && (
-            <div>
-              <p className="text-xs font-medium text-muted-foreground mb-1.5">Saved contacts</p>
-              <div className="flex flex-wrap gap-1.5">
-                {unselectedPeople.map((pe) => (
-                  <button
-                    key={pe.id}
-                    type="button"
-                    onClick={() => addParticipant(pe)}
-                    className="inline-flex items-center gap-1.5 rounded-full border bg-card px-2.5 py-1 text-xs transition-colors hover:bg-muted hover:border-primary/50"
-                  >
-                    <Plus size={11} />
-                    {pe.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <input
-              type="text"
-              value={guestName}
-              onChange={(e) => setGuestName(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter") addGuest(); }}
-              placeholder="Add guest by name..."
-              className="min-h-10 w-full flex-1 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-            />
-            <Button variant="outline" size="sm" onClick={addGuest} disabled={!guestName.trim()} className="shrink-0">
-              Add
-            </Button>
-          </div>
+          <ContactSearch
+            people={people}
+            query={contactQuery}
+            onQueryChange={setContactQuery}
+            onSelect={handleSelectContact}
+            onAddNew={handleAddNewContact}
+          />
 
           {error && <p className="text-sm text-destructive">{error}</p>}
 
@@ -683,6 +662,12 @@ export function SplitBillDialog({
         </div>
       )}
       </div>
+      <NewContactDialog
+        open={newContactOpen}
+        initialName={newContactName}
+        onClose={() => setNewContactOpen(false)}
+        onCreated={handleNewContactCreated}
+      />
     </Dialog>
   );
 }

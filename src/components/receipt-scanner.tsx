@@ -13,6 +13,8 @@ import {
 } from "@/lib/api";
 import { CURRENCIES, getCurrencySymbol } from "@/lib/currency";
 import { BillItemAssignmentEditor, type ItemConfig } from "@/components/bill-item-assignment-editor";
+import { ContactSearch } from "@/components/contact-search";
+import { NewContactDialog } from "@/components/new-contact-dialog";
 
 interface ScannerParticipant {
   id: string;
@@ -66,7 +68,9 @@ export function ReceiptScanner({
   const [people, setPeople] = useState<Person[]>([]);
   const [participants, setParticipants] = useState<ScannerParticipant[]>([]);
   const [includeMyself, setIncludeMyself] = useState(true);
-  const [guestName, setGuestName] = useState("");
+  const [contactQuery, setContactQuery] = useState("");
+  const [newContactOpen, setNewContactOpen] = useState(false);
+  const [newContactName, setNewContactName] = useState("");
   const [method, setMethod] = useState("equal");
   const [methodAmounts, setMethodAmounts] = useState<number[]>([]);
   const [showPersonPicker, setShowPersonPicker] = useState(false);
@@ -105,11 +109,13 @@ export function ReceiptScanner({
     setDirty(false);
     setParticipants([]);
     setIncludeMyself(true);
-    setGuestName("");
+    setContactQuery("");
+    setNewContactOpen(false);
     setMethod("equal");
     setMethodAmounts([]);
     setShowPersonPicker(false);
     setCreating(false);
+    confirmingRef.current = false;
   }
 
   function handleClose() {
@@ -156,6 +162,17 @@ export function ReceiptScanner({
   function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) handleFile(file);
+  }
+
+  function startManualEntry() {
+    setError(null);
+    setResult(null);
+    setScanning(false);
+    setMerchant("");
+    setDate("");
+    setTaxAndCharges(0);
+    setItems([{ description: "", quantity: 1, unitPrice: 0, amount: 0, category: "Other", confidence: 0 }]);
+    setStep("items");
   }
 
   function markDirty() {
@@ -232,16 +249,19 @@ export function ReceiptScanner({
     });
   }
 
-  function addGuest() {
-    const name = guestName.trim();
-    if (!name) return;
-    const exists = participants.some((p) => !p.personId && p.guestName === name);
-    if (exists) return;
-    setParticipants((prev) => [
-      ...prev,
-      { id: crypto.randomUUID(), personId: null, guestName: name },
-    ]);
-    setGuestName("");
+  function handleSelectContact(person: Person) {
+    addParticipant(person);
+    setContactQuery("");
+  }
+
+  function handleAddNewContact(name: string) {
+    setNewContactName(name);
+    setNewContactOpen(true);
+  }
+
+  function handleNewContactCreated(person: Person) {
+    setNewContactOpen(false);
+    addParticipant(person);
   }
 
   function removeParticipant(id: string) {
@@ -326,6 +346,24 @@ export function ReceiptScanner({
     const p = getEffectiveParticipants();
     const total = getComputedTotal();
 
+    const unassignedItemNames =
+      p.length >= 2 && method === "by-item"
+        ? items
+            .map((item, itemIdx) => {
+              const config = itemAssignments[itemIdx];
+              const unassigned = !config || Object.keys(config.participantConfigs).length === 0;
+              return unassigned ? (item.description || `Item ${itemIdx + 1}`) : null;
+            })
+            .filter((name): name is string => name !== null)
+        : [];
+
+    if (unassignedItemNames.length > 0) {
+      setError(`Every item must be assigned to at least one person. Unassigned: ${unassignedItemNames.join(", ")}`);
+      confirmingRef.current = false;
+      setCreating(false);
+      return;
+    }
+
     try {
       const firstCategoryId = items[0]?.category
         ? (categories.find((c) => c.name === items[0].category)?.id || categories[0]?.id || "")
@@ -361,19 +399,6 @@ export function ReceiptScanner({
         }> | undefined;
 
         if (method === "by-item") {
-          const unassignedNames = items
-            .map((item, itemIdx) => {
-              const config = itemAssignments[itemIdx];
-              const unassigned = !config || Object.keys(config.participantConfigs).length === 0;
-              return unassigned ? (item.description || `Item ${itemIdx + 1}`) : null;
-            })
-            .filter((name): name is string => name !== null);
-
-          if (unassignedNames.length > 0) {
-            setError(`Every item must be assigned to at least one person. Unassigned: ${unassignedNames.join(", ")}`);
-            return;
-          }
-
           participantsPayload = p.map((pp) => ({
             personId: pp.personId || undefined,
             guestName: pp.personId ? undefined : pp.guestName || undefined,
@@ -548,6 +573,17 @@ export function ReceiptScanner({
               </button>
             </div>
           )}
+
+          <div className="mt-6 flex justify-center">
+            <button
+              type="button"
+              onClick={startManualEntry}
+              className="inline-flex items-center text-sm font-medium text-green-600 underline underline-offset-4 transition-colors hover:text-green-700"
+            >
+              Manual Entry
+              <ChevronRight size={14} className="ml-0.5 inline" />
+            </button>
+          </div>
         </>
       )}
 
@@ -779,42 +815,13 @@ export function ReceiptScanner({
             )}
           </div>
 
-          <div>
-            {people.filter((pe) => !participants.some((p) => p.personId === pe.id)).length > 0 && (
-              <div className="mb-2">
-                <p className="text-xs font-medium text-muted-foreground mb-1.5">Saved contacts</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {people
-                    .filter((pe) => !participants.some((p) => p.personId === pe.id))
-                    .map((pe) => (
-                      <button
-                        key={pe.id}
-                        type="button"
-                        onClick={() => addParticipant(pe)}
-                        className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-xs transition-colors hover:bg-muted hover:border-primary/50"
-                      >
-                        <Plus size={11} />
-                        {pe.name}
-                      </button>
-                    ))}
-                </div>
-              </div>
-            )}
-
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={guestName}
-                onChange={(e) => setGuestName(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") addGuest(); }}
-                placeholder="Add guest by name..."
-                className="flex h-9 flex-1 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-              />
-              <Button variant="outline" size="sm" onClick={addGuest} disabled={!guestName.trim()}>
-                Add
-              </Button>
-            </div>
-          </div>
+          <ContactSearch
+            people={people}
+            query={contactQuery}
+            onQueryChange={setContactQuery}
+            onSelect={handleSelectContact}
+            onAddNew={handleAddNewContact}
+          />
 
           {error && <p className="text-sm text-destructive">{error}</p>}
 
@@ -988,11 +995,11 @@ export function ReceiptScanner({
 
           {error && <p className="text-sm text-destructive">{error}</p>}
 
-          <div className="flex gap-3 pt-2">
-            <Button variant="outline" onClick={handleClose} className="flex-1">
+          <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row">
+            <Button variant="outline" size="lg" onClick={handleClose} className="min-h-11 flex-1">
               Cancel
             </Button>
-            <Button onClick={handleConfirm} disabled={creating} className="flex-1">
+            <Button size="lg" onClick={handleConfirm} disabled={creating} className="min-h-11 flex-1">
               {creating ? (
                 <><Loader2 size={16} className="animate-spin" /> Creating...</>
               ) : (
@@ -1002,6 +1009,12 @@ export function ReceiptScanner({
           </div>
         </div>
       )}
+      <NewContactDialog
+        open={newContactOpen}
+        initialName={newContactName}
+        onClose={() => setNewContactOpen(false)}
+        onCreated={handleNewContactCreated}
+      />
     </Dialog>
   );
 }

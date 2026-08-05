@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import {
   Receipt, ArrowLeft, Table, Users,
-  ShoppingCart, Utensils, Car, Zap, Film, ShoppingBag, Heart, Home, Plane, Repeat, MoreHorizontal,
+  ShoppingCart, Utensils, Car, Zap, Film, ShoppingBag, Heart, Home, Plane, Repeat, MoreHorizontal, HandCoins,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -294,13 +294,17 @@ export default function ExpensesPage() {
                 </div>
               </div>
               <div className="flex gap-2 self-start sm:self-auto">
+                <Button variant="outline" nativeButton={false} render={<Link href="/debts" />}>
+                  <HandCoins size={16} />
+                  <span className="hidden sm:inline">IOUs</span>
+                </Button>
                 <Button variant="outline" onClick={() => setManagePeopleOpen(true)}>
                   <Users size={16} />
                   <span className="hidden sm:inline">People</span>
                 </Button>
                 <Button variant="outline" onClick={() => setReceiptScannerOpen(true)}>
                   <Receipt size={16} />
-                  <span className="hidden sm:inline">Scan</span>
+                  <span className="hidden sm:inline">Split Bill</span>
                 </Button>
                 <Button variant="outline" onClick={() => setMode("bulk")}>
                   <Table size={16} />

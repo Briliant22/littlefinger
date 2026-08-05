@@ -36,6 +36,17 @@ export function ManagePeopleDialog({
   useEffect(() => {
     if (open) loadPeople();
   }, [open]);
+
+  useEffect(() => {
+    if (!open) {
+      setEditingId(null);
+      setEditName("");
+      setEditContact("");
+      setAdding(false);
+      setAddName("");
+      setAddContact("");
+    }
+  }, [open]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
   async function handleAdd() {
@@ -105,37 +116,30 @@ export function ManagePeopleDialog({
                 <User size={14} className="text-muted-foreground" />
               </div>
               {editingId === person.id ? (
-                <div className="flex flex-1 flex-col gap-1.5 sm:flex-row sm:items-center">
-                  <input
-                    type="text"
-                    value={editName}
-                    onChange={(e) => setEditName(e.target.value)}
-                    className="flex h-8 flex-1 rounded-md border border-input bg-background px-2 text-sm"
-                    autoFocus
-                  />
-                  <input
-                    type="text"
-                    value={editContact}
-                    onChange={(e) => setEditContact(e.target.value)}
-                    placeholder="Contact (optional)"
-                    className="flex h-8 w-full rounded-md border border-input bg-background px-2 text-sm sm:w-32"
-                  />
-                  <div className="flex gap-1">
-                    <button
-                      type="button"
-                      onClick={() => handleEdit(person.id)}
-                      disabled={saving || !editName.trim()}
-                      className="flex size-7 items-center justify-center rounded-md text-primary hover:bg-primary/10"
-                    >
-                      {saving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setEditingId(null)}
-                      className="flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted"
-                    >
-                      <X size={14} />
-                    </button>
+                <div className="flex w-full flex-col gap-2">
+                  <div className="flex flex-1 flex-col gap-2 sm:flex-row">
+                    <input
+                      type="text"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className="h-10 w-full rounded-md border border-input bg-background px-2 text-sm sm:flex-1"
+                      autoFocus
+                    />
+                    <input
+                      type="text"
+                      value={editContact}
+                      onChange={(e) => setEditContact(e.target.value)}
+                      placeholder="Contact (optional)"
+                      className="h-10 w-full rounded-md border border-input bg-background px-2 text-sm sm:w-36"
+                    />
+                  </div>
+                  <div className="flex w-full justify-end gap-1">
+                    <Button size="sm" onClick={() => handleEdit(person.id)} disabled={saving || !editName.trim()}>
+                      {saving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />} Save
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => setEditingId(null)}>
+                      <X size={14} /> Cancel
+                    </Button>
                   </div>
                 </div>
               ) : (

@@ -1,0 +1,251 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { ArrowLeft, CheckCircle2, Circle, HandCoins, Receipt, Trash2, Loader2, User } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { DebtForm } from "@/components/debt-form";
+import { fetchDebts, deleteDebt, toggleManualDebtPaid, toggleParticipantPaid, type Debt } from "@/lib/api";
+import { formatCurrency } from "@/lib/currency";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+type Filter = "all" | "outstanding" | "paid";
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: new Date(dateStr).getFullYear() !== new Date().getFullYear() ? "numeric" : undefined,
+  });
+}
+
+export default function DebtsPage() {
+  const [debts, setDebts] = useState<Debt[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [filter, setFilter] = useState<Filter>("outstanding");
+  const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const loadData = useCallback(() => {
+    setError(null);
+    setLoading(true);
+    fetchDebts()
+      .then(setDebts)
+      .catch(() => setError("Failed to load debts"))
+      .finally(() => setLoading(false));
+  }, []);
+
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  const outstanding = debts.filter((d) => !d.paid);
+  const totals: Record<string, number> = {};
+  for (const d of outstanding) {
+    totals[d.currency] = (totals[d.currency] || 0) + d.amount;
+  }
+
+  const filtered = debts.filter((d) => {
+    if (filter === "outstanding") return !d.paid;
+    if (filter === "paid") return d.paid;
+    return true;
+  });
+
+  async function handleTogglePaid(debt: Debt) {
+    if (togglingId) return;
+    setTogglingId(debt.id);
+    try {
+      if (debt.source === "bill" && debt.billSplitId) {
+        await toggleParticipantPaid(debt.billSplitId, debt.id);
+      } else {
+        await toggleManualDebtPaid(debt.id);
+      }
+      await loadData();
+    } catch {
+      setError("Failed to update debt status");
+    } finally {
+      setTogglingId(null);
+    }
+  }
+
+  async function handleDelete(id: string) {
+    setDeletingId(id);
+    try {
+      await deleteDebt(id);
+      await loadData();
+    } catch {
+      setError("Failed to delete debt");
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
+  return (
+    <div className="page-surface min-h-screen">
+      <div className="mx-auto max-w-screen-xl px-6 py-8 lg:py-12">
+        {error && (
+          <div className="mb-6 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+            {error}
+          </div>
+        )}
+
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-4">
+            <Link
+              href="/"
+              className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              <ArrowLeft size={16} />
+            </Link>
+            <div>
+              <h1 className="text-2xl font-semibold">I Owe You</h1>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                Money others owe you from split bills and manual debts
+              </p>
+            </div>
+          </div>
+          <div className="self-start sm:self-auto">
+            <DebtForm onCreated={loadData} />
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <div className="data-card rounded-xl p-4">
+            <p className="data-label">Total owed to you</p>
+            <div className="mt-1 space-y-0.5">
+              {Object.entries(totals).length === 0 ? (
+                <p className="font-mono tabular-nums text-lg font-medium text-muted-foreground">
+                  {formatCurrency(0, "IDR")}
+                </p>
+              ) : (
+                Object.entries(totals).map(([currency, amount]) => (
+                  <p key={currency} className="font-mono tabular-nums text-lg font-medium">
+                    {formatCurrency(amount as number, currency)}
+                  </p>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <Tabs value={filter} onValueChange={(v) => setFilter(v as Filter)}>
+            <TabsList className="w-full sm:w-auto">
+              <TabsTrigger value="outstanding" className="flex-1 sm:flex-none">Outstanding</TabsTrigger>
+              <TabsTrigger value="paid" className="flex-1 sm:flex-none">Paid</TabsTrigger>
+              <TabsTrigger value="all" className="flex-1 sm:flex-none">All</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+
+        {loading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-20 animate-pulse rounded-xl bg-muted" />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-12 text-center sm:py-16">
+            <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-primary/10">
+              <HandCoins size={24} className="text-primary" />
+            </div>
+            <h2 className="text-lg font-semibold mb-1">
+              {debts.length === 0 ? "No debts yet" : "Nothing here"}
+            </h2>
+            <p className="text-sm text-muted-foreground mb-6 max-w-sm">
+              {debts.length === 0
+                ? "Split a bill or record a manual debt to start tracking who owes you money."
+                : filter === "paid"
+                  ? "No settled debts yet."
+                  : "No outstanding debts right now."}
+            </p>
+            <DebtForm onCreated={loadData} />
+          </div>
+        ) : (
+          <div className="space-y-3 pb-4">
+            {filtered.map((debt) => (
+              <div key={debt.id} className="card-surface rounded-xl p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted">
+                      <User size={16} className="text-muted-foreground" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium">{debt.personName}</p>
+                      <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px] text-muted-foreground sm:gap-x-2 sm:text-xs">
+                        {debt.source === "bill" ? (
+                          <>
+                            <span className="inline-flex items-center gap-1">
+                              <Receipt size={11} />
+                              {debt.merchant}
+                            </span>
+                            <span className="text-muted-foreground/40">&middot;</span>
+                            <span>Bill split</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>Manual</span>
+                            {debt.note && (
+                              <>
+                                <span className="text-muted-foreground/40">&middot;</span>
+                                <span className="min-w-0 max-w-full truncate">{debt.note}</span>
+                              </>
+                            )}
+                          </>
+                        )}
+                        <span className="text-muted-foreground/40">&middot;</span>
+                        <span>{formatDate(debt.createdAt)}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className={`shrink-0 font-mono tabular-nums text-sm font-medium ${debt.paid ? "text-muted-foreground line-through" : ""}`}>
+                    {formatCurrency(debt.amount, debt.currency)}
+                  </p>
+
+                  <div className="flex shrink-0 gap-1.5 sm:ml-auto">
+                    <Button
+                      variant={debt.paid ? "secondary" : "outline"}
+                      size="sm"
+                      onClick={() => handleTogglePaid(debt)}
+                      disabled={!!togglingId}
+                      className="h-8 flex-1 gap-1.5 sm:flex-none"
+                    >
+                      {togglingId === debt.id ? (
+                        <Loader2 size={14} className="animate-spin" />
+                      ) : debt.paid ? (
+                        <CheckCircle2 size={14} className="text-primary" />
+                      ) : (
+                        <Circle size={14} />
+                      )}
+                      <span>{debt.paid ? "Paid" : "Mark paid"}</span>
+                    </Button>
+                    {debt.source === "manual" && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDelete(debt.id)}
+                        disabled={!!deletingId}
+                        className="h-8 px-2 text-muted-foreground hover:text-destructive"
+                        aria-label="Delete debt"
+                      >
+                        {deletingId === debt.id ? (
+                          <Loader2 size={14} className="animate-spin" />
+                        ) : (
+                          <Trash2 size={14} />
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
