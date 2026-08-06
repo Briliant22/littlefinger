@@ -15,6 +15,7 @@ import peopleRouter from "./routes/people";
 import billSplitsRouter from "./routes/bill-splits";
 import receiptsRouter from "./routes/receipts";
 import debtsRouter from "./routes/debts";
+import reportsRouter from "./routes/reports";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -34,6 +35,7 @@ app.use("/api/people", peopleRouter);
 app.use("/api/bill-splits", billSplitsRouter);
 app.use("/api/receipts", receiptsRouter);
 app.use("/api/debts", debtsRouter);
+app.use("/api/reports", reportsRouter);
 
 app.listen(port, () => {
   const hasApiKey = process.env.OPENROUTER_API_KEY && process.env.OPENROUTER_API_KEY.length > 0;

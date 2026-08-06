@@ -410,3 +410,35 @@ export async function deleteDebt(id: string): Promise<void> {
     throw new Error(err.error);
   }
 }
+
+export interface InsightReport {
+  id: string;
+  userId: string;
+  periodType: "weekly" | "monthly";
+  periodStart: string;
+  periodEnd: string;
+  summaryText: string;
+  statsJson: string;
+  createdAt: string;
+  parsed: AiReportContent;
+}
+
+export interface AiReportContent {
+  summary?: string;
+  highlights?: string[];
+  stats?: {
+    totalSpent?: string;
+    vsPrevious?: string;
+    topCategory?: string;
+    topMerchant?: string;
+  };
+  recommendations?: string[];
+}
+
+export async function fetchReport(
+  type: "weekly" | "monthly"
+): Promise<InsightReport> {
+  const res = await fetch(`${API_URL}/api/reports?type=${encodeURIComponent(type)}`);
+  if (!res.ok) throw new Error("Failed to load report");
+  return res.json();
+}

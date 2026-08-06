@@ -1,0 +1,15 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - navigation [ref=f3e3]:
+      - generic [ref=f3e4]:
+        - link "Expense List" [ref=f3e5] [cursor=pointer]:
+          - /url: /expenses
+        - link "IOUs" [ref=f3e9] [cursor=pointer]:
+          - /url: /debts
+        - link "Financial Dashboard" [ref=f3e17] [cursor=pointer]:
+          - /url: /dashboard
+    - main [ref=f3e24]:
+      - generic [ref=f3e28]:
+        - heading "Financial Dashboard" [level=1] [ref=f3e29]
+        - paragraph [ref=f3e30]: Overview of your spending and IOUs
+  - button "Open Next.js Dev Tools" [ref=f3e43] [cursor=pointer]
