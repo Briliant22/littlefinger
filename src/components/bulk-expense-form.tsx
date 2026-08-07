@@ -5,6 +5,8 @@ import { Plus, Trash2, Loader2, ArrowLeft, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createExpensesBulk, fetchCurrentUser, type Category } from "@/lib/api";
 import { CURRENCIES, getCurrencySymbol, formatCurrency } from "@/lib/currency";
+import { Select } from "@/components/ui/select";
+import { DateInput } from "@/components/ui/date-input";
 
 interface BulkRow {
   id: string;
@@ -233,24 +235,23 @@ export function BulkExpenseForm({
                       )}
                     </td>
                     <td className="px-3 py-1.5">
-                      <select
+                      <Select
                         value={row.currency}
                         onChange={(e) => updateRow(row.id, "currency", e.target.value)}
-                        className="flex h-8 w-full rounded-md border border-input bg-background px-2.5 py-1 text-sm text-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                        className="h-8 rounded-md px-2.5"
                       >
                         {CURRENCIES.map((c) => (
                           <option key={c.code} value={c.code}>
                             {c.code}
                           </option>
                         ))}
-                      </select>
+                      </Select>
                     </td>
                     <td className="px-3 py-1.5">
-                      <input
-                        type="date"
+                      <DateInput
                         value={row.date}
                         onChange={(e) => updateRow(row.id, "date", e.target.value)}
-                        className="flex h-8 w-full rounded-md border border-input bg-background px-2.5 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                        className="h-8 rounded-md px-2.5"
                       />
                     </td>
                     <td className="px-3 py-1.5">
@@ -269,13 +270,11 @@ export function BulkExpenseForm({
                       )}
                     </td>
                     <td className="px-3 py-1.5">
-                      <select
+                      <Select
                         value={row.categoryId}
                         onChange={(e) => updateRow(row.id, "categoryId", e.target.value)}
                         onBlur={() => handleFieldBlur(row, "categoryId")}
-                        className={`flex h-8 w-full rounded-md border bg-background px-2.5 py-1 text-sm text-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 ${
-                          rowErrors.categoryId ? "border-destructive" : "border-input"
-                        }`}
+                        className={`h-8 rounded-md px-2.5 ${rowErrors.categoryId ? "border-destructive" : ""}`}
                       >
                         <option value="">Select</option>
                         {categories.map((cat) => (
@@ -283,7 +282,7 @@ export function BulkExpenseForm({
                             {cat.name}
                           </option>
                         ))}
-                      </select>
+                      </Select>
                       {rowErrors.categoryId && (
                         <p className="mt-0.5 text-xs text-destructive">{rowErrors.categoryId}</p>
                       )}
@@ -365,27 +364,26 @@ export function BulkExpenseForm({
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-muted-foreground">Currency</label>
-                    <select
+                    <Select
                       value={row.currency}
                       onChange={(e) => updateRow(row.id, "currency", e.target.value)}
-                      className="flex h-8 w-full rounded-md border border-input bg-background px-2.5 py-1 text-sm text-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                      className="h-8 rounded-md px-2.5"
                     >
                       {CURRENCIES.map((c) => (
                         <option key={c.code} value={c.code}>
                           {c.code}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-muted-foreground">Date</label>
-                    <input
-                      type="date"
+                    <DateInput
                       value={row.date}
                       onChange={(e) => updateRow(row.id, "date", e.target.value)}
-                      className="flex h-8 w-full rounded-md border border-input bg-background px-2.5 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                      className="h-8 rounded-md px-2.5"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -408,13 +406,11 @@ export function BulkExpenseForm({
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-muted-foreground">Category</label>
-                    <select
+                    <Select
                       value={row.categoryId}
                       onChange={(e) => updateRow(row.id, "categoryId", e.target.value)}
                       onBlur={() => handleFieldBlur(row, "categoryId")}
-                      className={`flex h-8 w-full rounded-md border bg-background px-2.5 py-1 text-sm text-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 ${
-                        rowErrors.categoryId ? "border-destructive" : "border-input"
-                      }`}
+                      className={`h-8 rounded-md px-2.5 ${rowErrors.categoryId ? "border-destructive" : ""}`}
                     >
                       <option value="">Select</option>
                       {categories.map((cat) => (
@@ -422,7 +418,7 @@ export function BulkExpenseForm({
                           {cat.name}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                     {rowErrors.categoryId && (
                       <p className="text-xs text-destructive">{rowErrors.categoryId}</p>
                     )}

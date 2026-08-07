@@ -1,0 +1,86 @@
+- generic [active] [ref=f13e1]:
+  - generic [ref=f13e2]:
+    - complementary [ref=f13e3]:
+      - generic [ref=f13e4]:
+        - link "Littlefinger" [ref=f13e5] [cursor=pointer]:
+          - /url: /
+        - button "Collapse sidebar" [ref=f13e6]
+      - navigation [ref=f13e10]:
+        - link "Expense List" [ref=f13e11] [cursor=pointer]:
+          - /url: /expenses
+        - link "IOUs" [ref=f13e15] [cursor=pointer]:
+          - /url: /debts
+        - link "Financial Dashboard" [ref=f13e23] [cursor=pointer]:
+          - /url: /dashboard
+    - main [ref=f13e30]:
+      - generic [ref=f13e33]:
+        - generic [ref=f13e890]:
+          - generic [ref=f13e891]:
+            - button "Back to list" [ref=f13e892]
+            - generic [ref=f13e893]:
+              - heading "Bulk Entry" [level=2] [ref=f13e894]
+              - paragraph [ref=f13e895]: Add multiple expenses at once
+          - table [ref=f13e897]:
+            - rowgroup [ref=f13e898]:
+              - row [ref=f13e899]:
+                - columnheader "Amount" [ref=f13e900]
+                - columnheader "Currency" [ref=f13e901]
+                - columnheader "Date" [ref=f13e902]
+                - columnheader "Merchant" [ref=f13e903]
+                - columnheader "Category" [ref=f13e904]
+                - columnheader "Notes" [ref=f13e905]
+                - columnheader [ref=f13e906]
+            - rowgroup [ref=f13e907]:
+              - row [ref=f13e908]:
+                - cell [ref=f13e909]:
+                  - generic [ref=f13e910]:
+                    - generic: Rp
+                    - spinbutton "0.00" [ref=f13e911]
+                - cell "IDR" [ref=f13e912]:
+                  - combobox [ref=f13e913]:
+                    - option "IDR" [selected]
+                    - option "USD"
+                    - option "SGD"
+                    - option "EUR"
+                    - option "JPY"
+                    - option "GBP"
+                    - option "AUD"
+                    - option "MYR"
+                    - option "PHP"
+                    - option "THB"
+                    - option "HKD"
+                    - option "CNY"
+                    - option "KRW"
+                    - option "SAR"
+                    - option "VND"
+                - cell [ref=f13e914]:
+                  - textbox [ref=f13e916]: 2026-08-06
+                - cell [ref=f13e917]:
+                  - textbox "Where?" [ref=f13e918]
+                - cell "Select" [ref=f13e919]:
+                  - combobox [ref=f13e920]:
+                    - option "Select" [selected]
+                    - option "Dining"
+                    - option "Entertainment"
+                    - option "Groceries"
+                    - option "Health"
+                    - option "Housing"
+                    - option "Other"
+                    - option "Shopping"
+                    - option "Subscriptions"
+                    - option "Transport"
+                    - option "Travel"
+                    - option "Utilities"
+                - cell [ref=f13e921]:
+                  - textbox "Notes..." [ref=f13e922]
+                - cell [ref=f13e923]:
+                  - button "Delete row" [disabled] [ref=f13e924]
+          - generic [ref=f13e928]:
+            - button "Add Row" [ref=f13e929]
+            - generic [ref=f13e930]: 1 expense
+          - generic [ref=f13e932]:
+            - button "Cancel" [ref=f13e933]
+            - button "Save All" [ref=f13e934]
+        - button "Add Expense" [ref=f13e99]
+  - button "Open Next.js Dev Tools" [ref=f13e105] [cursor=pointer]
+  - alert [ref=f13e827]

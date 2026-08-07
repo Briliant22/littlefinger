@@ -1,0 +1,19 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]:
+        - link "Littlefinger" [ref=e5] [cursor=pointer]:
+          - /url: /
+        - button "Collapse sidebar" [ref=e6]
+      - navigation [ref=e10]:
+        - link "Expense List" [ref=e11] [cursor=pointer]:
+          - /url: /expenses
+        - link "IOUs" [ref=e15] [cursor=pointer]:
+          - /url: /debts
+        - link "Financial Dashboard" [ref=e23] [cursor=pointer]:
+          - /url: /dashboard
+    - main [ref=e30]:
+      - generic [ref=e34]:
+        - heading "Financial Dashboard" [level=1] [ref=e35]
+        - paragraph [ref=e36]: Overview of your spending and IOUs
+  - button "Open Next.js Dev Tools" [ref=e49] [cursor=pointer]

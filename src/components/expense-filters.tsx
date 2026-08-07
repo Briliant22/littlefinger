@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Calendar, Search, ChevronDown, ChevronUp } from "lucide-react";
+import { Search, ChevronDown, ChevronUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { DateInput } from "@/components/ui/date-input";
 import { MultiSelect } from "@/components/ui/multi-select";
 import type { Category } from "@/lib/api";
 
@@ -69,7 +70,7 @@ export function ExpenseFilters({
       <div
         className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${isCollapsed ? "[grid-template-rows:0fr]" : "mt-3 [grid-template-rows:1fr]"}`}
       >
-        <div className="min-h-0 overflow-hidden">
+        <div className="min-h-0 overflow-hidden px-1 pb-1">
           <div className="grid gap-3 sm:grid-cols-2">
         {/* Date range - spans full width so the two inputs never get squeezed */}
         <div className="space-y-1.5 sm:col-span-2">
@@ -77,28 +78,18 @@ export function ExpenseFilters({
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
             <div className="space-y-1">
               <span className="block text-xs text-muted-foreground sm:hidden">From</span>
-              <div className="relative">
-                <Calendar size={14} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="date"
-                  value={filters.dateFrom}
-                  onChange={(e) => onChange({ ...filters, dateFrom: e.target.value })}
-                  className="flex h-9 w-full rounded-lg border border-input bg-background pl-8 pr-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                />
-              </div>
+              <DateInput
+                value={filters.dateFrom}
+                onChange={(e) => onChange({ ...filters, dateFrom: e.target.value })}
+              />
             </div>
             <span className="hidden text-center text-xs text-muted-foreground sm:block sm:px-1">to</span>
             <div className="space-y-1">
               <span className="block text-xs text-muted-foreground sm:hidden">To</span>
-              <div className="relative">
-                <Calendar size={14} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="date"
-                  value={filters.dateTo}
-                  onChange={(e) => onChange({ ...filters, dateTo: e.target.value })}
-                  className="flex h-9 w-full rounded-lg border border-input bg-background pl-8 pr-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                />
-              </div>
+              <DateInput
+                value={filters.dateTo}
+                onChange={(e) => onChange({ ...filters, dateTo: e.target.value })}
+              />
             </div>
           </div>
         </div>

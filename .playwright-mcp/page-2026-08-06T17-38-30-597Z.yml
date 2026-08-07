@@ -1,0 +1,54 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]:
+        - link "Littlefinger" [ref=e5] [cursor=pointer]:
+          - /url: /
+        - button "Collapse sidebar" [ref=e6]
+      - navigation [ref=e10]:
+        - link "Expense List" [ref=e11] [cursor=pointer]:
+          - /url: /expenses
+        - link "IOUs" [ref=e15] [cursor=pointer]:
+          - /url: /debts
+        - link "Financial Dashboard" [ref=e23] [cursor=pointer]:
+          - /url: /dashboard
+    - main [ref=e30]:
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - button "Go back" [ref=e36]
+            - generic [ref=e39]:
+              - heading "Expenses" [level=1] [ref=e40]
+              - paragraph [ref=e41]: Track every expense, in any currency
+          - generic [ref=e42]:
+            - button "People" [ref=e43]
+            - button "Split Bill" [ref=e45]
+            - button "Bulk Entry" [ref=e47]
+            - button "Add Expense" [ref=e49]
+        - generic [ref=e51]:
+          - generic [ref=e53]:
+            - paragraph [ref=e54]: Filters
+            - button "Collapse filters" [ref=e55]
+          - generic [ref=e60]:
+            - generic [ref=e61]:
+              - text: Date range
+              - generic [ref=e62]:
+                - textbox [ref=e65]
+                - generic [ref=e66]: to
+                - textbox [ref=e69]
+            - generic [ref=e70]:
+              - text: Category
+              - button "All categories" [ref=e72]
+            - generic [ref=e76]:
+              - text: Merchant
+              - textbox "Search merchant..." [ref=e78]
+        - generic [ref=e89]:
+          - generic [ref=e90]:
+            - heading "Summary" [level=2] [ref=e91]
+            - tablist [ref=e93]:
+              - tab "Daily" [selected] [ref=e94]
+              - tab "Weekly" [ref=e95]
+              - tab "Monthly" [ref=e96]
+          - paragraph [ref=e98]: No expenses in this period
+        - button "Add Expense" [ref=e99]
+  - button "Open Next.js Dev Tools" [ref=e105] [cursor=pointer]

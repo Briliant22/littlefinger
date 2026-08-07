@@ -1,0 +1,59 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - link "Littlefinger" [ref=f1e5] [cursor=pointer]:
+          - /url: /
+        - button "Collapse sidebar" [ref=f1e6]
+      - navigation [ref=f1e10]:
+        - link "Expense List" [ref=f1e11] [cursor=pointer]:
+          - /url: /expenses
+        - link "IOUs" [ref=f1e15] [cursor=pointer]:
+          - /url: /debts
+        - link "Financial Dashboard" [ref=f1e23] [cursor=pointer]:
+          - /url: /dashboard
+    - main [ref=f1e30]:
+      - generic [ref=f1e33]:
+        - generic [ref=f1e891]:
+          - generic [ref=f1e892]:
+            - button "Back to list" [ref=f1e893]
+            - generic [ref=f1e894]:
+              - heading "Bulk Entry" [level=2] [ref=f1e895]
+              - paragraph [ref=f1e896]: Add multiple expenses at once
+          - table [ref=f1e898]:
+            - rowgroup [ref=f1e899]:
+              - row [ref=f1e900]:
+                - columnheader "Amount" [ref=f1e901]
+                - columnheader "Currency" [ref=f1e902]
+                - columnheader "Date" [ref=f1e903]
+                - columnheader "Merchant" [ref=f1e904]
+                - columnheader "Category" [ref=f1e905]
+                - columnheader "Notes" [ref=f1e906]
+                - columnheader [ref=f1e907]
+            - rowgroup [ref=f1e908]:
+              - row [ref=f1e909]:
+                - cell [ref=f1e910]:
+                  - generic [ref=f1e911]:
+                    - generic: Rp
+                    - spinbutton "0.00" [ref=f1e912]
+                - cell [ref=f1e913]:
+                  - button "IDR" [ref=f1e915]
+                - cell [ref=f1e919]:
+                  - textbox [ref=f1e921]: 2026-08-06
+                - cell [ref=f1e922]:
+                  - textbox "Where?" [ref=f1e923]
+                - cell [ref=f1e924]:
+                  - button "Select" [ref=f1e926]
+                - cell [ref=f1e930]:
+                  - textbox "Notes..." [ref=f1e931]
+                - cell [ref=f1e932]:
+                  - button "Delete row" [disabled] [ref=f1e933]
+          - generic [ref=f1e937]:
+            - button "Add Row" [ref=f1e938]
+            - generic [ref=f1e939]: 1 expense
+          - generic [ref=f1e941]:
+            - button "Cancel" [ref=f1e942]
+            - button "Save All" [ref=f1e943]
+        - button "Add Expense" [ref=f1e99]
+  - button "Open Next.js Dev Tools" [ref=f1e105] [cursor=pointer]
+  - alert [ref=f1e863]

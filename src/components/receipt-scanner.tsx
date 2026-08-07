@@ -12,6 +12,8 @@ import {
   type Category, type Expense, type ReceiptScanResult, type Person,
 } from "@/lib/api";
 import { CURRENCIES, getCurrencySymbol } from "@/lib/currency";
+import { Select } from "@/components/ui/select";
+import { DateInput } from "@/components/ui/date-input";
 import { BillItemAssignmentEditor, type ItemConfig } from "@/components/bill-item-assignment-editor";
 import { ContactSearch } from "@/components/contact-search";
 import { NewContactDialog } from "@/components/new-contact-dialog";
@@ -602,24 +604,21 @@ export function ReceiptScanner({
             </div>
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground">Date</label>
-              <input
-                type="date"
+              <DateInput
                 value={date}
                 onChange={(e) => { markDirty(); setDate(e.target.value); }}
-                className="flex h-9 w-full rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
               />
             </div>
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground">Currency</label>
-              <select
+              <Select
                 value={currency}
                 onChange={(e) => { markDirty(); setCurrency(e.target.value); }}
-                className="flex h-9 w-full rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
               >
                 {CURRENCIES.map((c) => (
                   <option key={c.code} value={c.code}>{c.code}</option>
                 ))}
-              </select>
+              </Select>
             </div>
           </div>
 
@@ -652,15 +651,15 @@ export function ReceiptScanner({
                   </div>
 
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2">
-                    <select
+                    <Select
                       value={item.category}
                       onChange={(e) => updateItemField(i, "category", e.target.value)}
-                      className="flex h-8 rounded-lg border border-input bg-background px-2.5 text-xs sm:w-36 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                      className="h-8 rounded-lg px-2.5 text-xs sm:w-36"
                     >
                       {categories.map((c) => (
                         <option key={c.id} value={c.name}>{c.name}</option>
                       ))}
-                    </select>
+                    </Select>
                     <span
                       className={`inline-flex items-center self-start rounded-full px-2 py-0.5 text-xs font-medium ${getConfidenceBadge(item.confidence).class}`}
                     >
@@ -851,15 +850,15 @@ export function ReceiptScanner({
 
           <p className="text-sm font-medium">How do you want to split?</p>
 
-          <select
+          <Select
             value={method}
             onChange={(e) => handleMethodSelect(e.target.value)}
-            className="flex h-10 w-full rounded-xl border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="h-10 rounded-xl px-3"
           >
             {SPLIT_METHODS.map((m) => (
               <option key={m.value} value={m.value}>{m.label} - {m.desc}</option>
             ))}
-          </select>
+          </Select>
 
           {method === "by-item" ? (
             <div className="rounded-xl border bg-card p-4 text-center">

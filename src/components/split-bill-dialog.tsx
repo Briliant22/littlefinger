@@ -18,6 +18,7 @@ import {
   type BillSplit,
 } from "@/lib/api";
 import { formatCurrency } from "@/lib/currency";
+import { Select } from "@/components/ui/select";
 import { BillItemAssignmentEditor, type ItemConfig } from "@/components/bill-item-assignment-editor";
 import { ContactSearch } from "@/components/contact-search";
 import { NewContactDialog } from "@/components/new-contact-dialog";
@@ -82,6 +83,7 @@ export function SplitBillDialog({
   const [contactQuery, setContactQuery] = useState("");
   const [newContactOpen, setNewContactOpen] = useState(false);
   const [newContactName, setNewContactName] = useState("");
+  const [includeMyself, setIncludeMyself] = useState(true);
 
   useEffect(() => {
     if (open) {
@@ -102,7 +104,11 @@ export function SplitBillDialog({
         guestName: p.guestName || p.person?.name || "",
         amountOwed: p.amountOwed,
       }));
+      const hasYou = existingParticipants.some(
+        (p) => !p.personId && (p.guestName || "").trim().toLowerCase() === "you"
+      );
       setParticipants(existingParticipants);
+      setIncludeMyself(hasYou);
       setMethod(split.method);
       setMethodAmounts(
         split.method === "percentage"
@@ -150,7 +156,8 @@ export function SplitBillDialog({
       } else {
         setStep("participants");
         setMethod("equal");
-        setParticipants([]);
+        setParticipants([{ id: "myself", personId: null, guestName: "You", amountOwed: 0 }]);
+        setIncludeMyself(true);
         setMethodAmounts([]);
         setError(null);
         setContactQuery("");
@@ -203,6 +210,22 @@ export function SplitBillDialog({
     setParticipants((prev) => prev.filter((p) => p.id !== id));
   }
 
+  function toggleIncludeMyself() {
+    const next = !includeMyself;
+    setIncludeMyself(next);
+    if (next) {
+      setParticipants((prev) =>
+        prev.some((x) => !x.personId && (x.guestName || "").trim().toLowerCase() === "you")
+          ? prev
+          : [{ id: "myself", personId: null, guestName: "You", amountOwed: 0 }, ...prev]
+      );
+    } else {
+      setParticipants((prev) =>
+        prev.filter((x) => !(!x.personId && (x.guestName || "").trim().toLowerCase() === "you"))
+      );
+    }
+  }
+
   function updateParticipantAmount(id: string, amount: number) {
     setParticipants((prev) =>
       prev.map((p) => (p.id === id ? { ...p, amountOwed: amount } : p))
@@ -216,6 +239,9 @@ export function SplitBillDialog({
   function handleProceedToMethod() {
     if (!canProceedToMethod()) return;
     setMethod("equal");
+    const amounts = applyEqualSplit(exp.amount, participants.length);
+    setMethodAmounts(amounts);
+    setParticipants((prev) => prev.map((p, i) => ({ ...p, amountOwed: amounts[i] || 0 })));
     setStep("method");
   }
 
@@ -432,23 +458,52 @@ export function SplitBillDialog({
         <div className="space-y-3">
           <p className="text-sm font-medium">Who is splitting this bill?</p>
 
-          <div className="space-y-2 max-h-[30vh] overflow-y-auto pr-1">
-            {participants.map((p) => (
-              <div key={p.id} className="flex items-center gap-3 rounded-xl border bg-card px-3 py-2.5">
-                <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted">
-                  <Users size={14} className="text-muted-foreground" />
-                </div>
-                <span className="flex-1 text-sm truncate">{getParticipantLabel(p)}</span>
-                <button
-                  type="button"
-                  onClick={() => removeParticipant(p.id)}
-                  className="flex size-7 items-center justify-center rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
-                >
-                  <Trash2 size={13} />
-                </button>
+          <div className="flex items-center justify-between rounded-xl border bg-card p-3">
+            <div className="flex items-center gap-3">
+              <div className="flex size-8 items-center justify-center rounded-full bg-primary/10">
+                <Users size={14} className="text-primary" />
               </div>
-            ))}
-            {participants.length === 0 && (
+              <span className="text-sm font-medium">Include myself</span>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={includeMyself}
+              onClick={toggleIncludeMyself}
+              className={`relative inline-flex h-6 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 ${
+                includeMyself ? "bg-primary" : "bg-muted"
+              }`}
+            >
+              <span className={`pointer-events-none inline-block size-5 rounded-full bg-background shadow-sm ring-0 transition-transform ${
+                includeMyself ? "translate-x-4" : "translate-x-0"
+              }`} />
+            </button>
+          </div>
+
+          <div className="space-y-2 max-h-[30vh] overflow-y-auto pr-1">
+            {participants
+              .filter(
+                (p) =>
+                  !(includeMyself && !p.personId && (p.guestName || "").trim().toLowerCase() === "you")
+              )
+              .map((p) => (
+                <div key={p.id} className="flex items-center gap-3 rounded-xl border bg-card px-3 py-2.5">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted">
+                    <Users size={14} className="text-muted-foreground" />
+                  </div>
+                  <span className="flex-1 text-sm truncate">{getParticipantLabel(p)}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeParticipant(p.id)}
+                    className="flex size-7 items-center justify-center rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              ))}
+            {participants.filter(
+              (p) => !(includeMyself && !p.personId && (p.guestName || "").trim().toLowerCase() === "you")
+            ).length === 0 && (
               <p className="text-xs text-muted-foreground text-center py-3">Add at least two participants</p>
             )}
           </div>
@@ -488,15 +543,15 @@ export function SplitBillDialog({
 
           <p className="text-sm font-medium">How do you want to split?</p>
 
-          <select
+          <Select
             value={method}
             onChange={(e) => handleMethodSelect(e.target.value)}
-            className="flex h-10 w-full rounded-xl border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="h-10 rounded-xl px-3"
           >
-            {SPLIT_METHODS.map((m) => (
+            {(receiptItems.length > 0 ? SPLIT_METHODS : SPLIT_METHODS.filter((m) => m.value !== "by-item")).map((m) => (
               <option key={m.value} value={m.value}>{m.label} - {m.desc}</option>
             ))}
-          </select>
+          </Select>
 
           {method === "by-item" ? (
             <div className="rounded-xl border bg-card p-4 text-center">

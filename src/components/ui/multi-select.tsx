@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -21,16 +22,53 @@ export function MultiSelect({
   placeholder?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState<{ left: number; top: number; width: number } | null>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  function updatePosition() {
+    if (triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setPosition({ left: rect.left, top: rect.bottom + 4, width: rect.width });
+    }
+  }
+
+  useEffect(() => {
+    if (!open) return;
+
+    updatePosition();
+
+    function handleScroll() {
+      updatePosition();
+    }
+    function handleResize() {
+      updatePosition();
+    }
+    document.addEventListener("scroll", handleScroll, true);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      document.removeEventListener("scroll", handleScroll, true);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [open]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
         setOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   function toggle(value: string) {
@@ -49,8 +87,9 @@ export function MultiSelect({
         : `${selected.length} selected`;
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={rootRef} className="relative">
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen(!open)}
         className={cn(
@@ -63,37 +102,50 @@ export function MultiSelect({
         </span>
         <ChevronDown size={14} className={cn("shrink-0 text-muted-foreground transition-transform", open && "rotate-180")} />
       </button>
-      {open && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-60 overflow-auto rounded-lg border bg-card p-1 shadow-lg animate-fade-in">
-          {options.map((option) => {
-            const isSelected = selected.includes(option.value);
-            return (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => toggle(option.value)}
-                className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-sm transition-colors hover:bg-muted"
-              >
-                <div
-                  className={cn(
-                    "flex size-4 shrink-0 items-center justify-center rounded border transition-colors",
-                    isSelected
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-input"
-                  )}
+      {open &&
+        position &&
+        createPortal(
+          <div
+            style={{
+              position: "fixed",
+              left: position.left,
+              top: position.top,
+              width: position.width,
+              minWidth: 200,
+              zIndex: 50,
+            }}
+            className="max-h-60 overflow-auto rounded-lg border bg-card p-1 shadow-lg animate-fade-in"
+          >
+            {options.map((option) => {
+              const isSelected = selected.includes(option.value);
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => toggle(option.value)}
+                  className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-sm transition-colors hover:bg-muted"
                 >
-                  {isSelected && (
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                      <path d="M2 5L4 7L8 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  )}
-                </div>
-                <span>{option.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      )}
+                  <div
+                    className={cn(
+                      "flex size-4 shrink-0 items-center justify-center rounded border transition-colors",
+                      isSelected
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-input"
+                    )}
+                  >
+                    {isSelected && (
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                        <path d="M2 5L4 7L8 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </div>
+                  <span>{option.label}</span>
+                </button>
+              );
+            })}
+          </div>,
+          document.body
+        )}
     </div>
   );
 }

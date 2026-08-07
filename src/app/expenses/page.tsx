@@ -97,12 +97,11 @@ export default function ExpensesPage() {
   const [managePeopleOpen, setManagePeopleOpen] = useState(false);
   const [viewSplitExpense, setViewSplitExpense] = useState<Expense | null>(null);
   const [editingSplitExpense, setEditingSplitExpense] = useState<Expense | null>(null);
-  const [pendingSplitSummaryId, setPendingSplitSummaryId] = useState<string | null>(null);
 
   const loadData = useCallback(() => {
     setLoadError(null);
     setLoading(true);
-    Promise.all([
+    return Promise.all([
       fetchExpenses().catch(() => {
         return [] as Expense[];
       }),
@@ -117,6 +116,7 @@ export default function ExpensesPage() {
         if (categoriesData.length === 0) {
           setLoadError("Categories could not be loaded. Make sure the backend is running and seeded.");
         }
+        return expensesData;
       })
       .finally(() => setLoading(false));
   }, []);
@@ -125,16 +125,6 @@ export default function ExpensesPage() {
   useEffect(() => {
     loadData();
   }, [loadData]);
-
-  useEffect(() => {
-    if (pendingSplitSummaryId) {
-      const updated = expenses.find((e) => e.id === pendingSplitSummaryId);
-      if (updated?.billSplit) {
-        setViewSplitExpense(updated);
-        setPendingSplitSummaryId(null);
-      }
-    }
-  }, [expenses, pendingSplitSummaryId]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
   const filteredExpenses = useMemo(() => {
@@ -170,8 +160,11 @@ export default function ExpensesPage() {
     const id = splitExpense?.id || editingSplitExpense?.id || null;
     setSplitExpense(null);
     setEditingSplitExpense(null);
-    if (id) setPendingSplitSummaryId(id);
-    loadData();
+    loadData().then((expensesData) => {
+      if (!id) return;
+      const updated = expensesData.find((e) => e.id === id);
+      if (updated) setViewSplitExpense(updated);
+    });
   }
 
   function handleExpenseCreated(expense: Expense) {

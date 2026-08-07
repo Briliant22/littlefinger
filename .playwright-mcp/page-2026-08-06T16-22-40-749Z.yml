@@ -1,0 +1,54 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - complementary [ref=f3e3]:
+      - generic [ref=f3e4]:
+        - link "Littlefinger" [ref=f3e5] [cursor=pointer]:
+          - /url: /
+        - button "Collapse sidebar" [ref=f3e6]
+      - navigation [ref=f3e10]:
+        - link "Expense List" [ref=f3e11] [cursor=pointer]:
+          - /url: /expenses
+        - link "IOUs" [ref=f3e15] [cursor=pointer]:
+          - /url: /debts
+        - link "Financial Dashboard" [ref=f3e23] [cursor=pointer]:
+          - /url: /dashboard
+    - main [ref=f3e30]:
+      - generic [ref=f3e33]:
+        - generic [ref=f3e34]:
+          - generic [ref=f3e35]:
+            - button "Go back" [ref=f3e36]
+            - generic [ref=f3e39]:
+              - heading "Expenses" [level=1] [ref=f3e40]
+              - paragraph [ref=f3e41]: Track every expense, in any currency
+          - generic [ref=f3e42]:
+            - button "People" [ref=f3e43]
+            - button "Split Bill" [ref=f3e45]
+            - button "Bulk Entry" [ref=f3e47]
+            - button "Add Expense" [ref=f3e49]
+        - generic [ref=f3e51]:
+          - generic [ref=f3e53]:
+            - paragraph [ref=f3e54]: Filters
+            - button "Collapse filters" [ref=f3e55]
+          - generic [ref=f3e60]:
+            - generic [ref=f3e61]:
+              - text: Date range
+              - generic [ref=f3e62]:
+                - textbox [ref=f3e65]
+                - generic [ref=f3e66]: to
+                - textbox [ref=f3e69]
+            - generic [ref=f3e70]:
+              - text: Category
+              - button "All categories" [ref=f3e72]
+            - generic [ref=f3e76]:
+              - text: Merchant
+              - textbox "Search merchant..." [ref=f3e78]
+        - generic [ref=f3e89]:
+          - generic [ref=f3e90]:
+            - heading "Summary" [level=2] [ref=f3e91]
+            - tablist [ref=f3e93]:
+              - tab "Daily" [selected] [ref=f3e94]
+              - tab "Weekly" [ref=f3e95]
+              - tab "Monthly" [ref=f3e96]
+          - paragraph [ref=f3e98]: No expenses in this period
+        - button "Add Expense" [ref=f3e99]
+  - button "Open Next.js Dev Tools" [ref=f3e105] [cursor=pointer]

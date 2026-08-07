@@ -1,0 +1,476 @@
+- generic [ref=f13e1]:
+  - generic [ref=f13e2]:
+    - complementary [ref=f13e3]:
+      - generic [ref=f13e4]:
+        - link "Littlefinger" [ref=f13e5] [cursor=pointer]:
+          - /url: /
+        - button "Collapse sidebar" [ref=f13e6]
+      - navigation [ref=f13e10]:
+        - link "Expense List" [ref=f13e11] [cursor=pointer]:
+          - /url: /expenses
+        - link "IOUs" [ref=f13e15] [cursor=pointer]:
+          - /url: /debts
+        - link "Financial Dashboard" [ref=f13e23] [cursor=pointer]:
+          - /url: /dashboard
+    - main [ref=f13e30]:
+      - generic [ref=f13e33]:
+        - generic [ref=f13e34]:
+          - generic [ref=f13e35]:
+            - button "Go back" [ref=f13e36]
+            - generic [ref=f13e39]:
+              - heading "Expenses" [level=1] [ref=f13e40]
+              - paragraph [ref=f13e41]: Track every expense, in any currency
+          - generic [ref=f13e42]:
+            - button "People" [ref=f13e43]
+            - button "Split Bill" [ref=f13e45]
+            - button "Bulk Entry" [ref=f13e47]
+            - button "Add Expense" [ref=f13e49]
+            - dialog [ref=f13e864]:
+              - generic [ref=f13e865]:
+                - heading "Add Expense" [level=2] [ref=f13e866]
+                - button [ref=f13e867]
+              - generic [ref=f13e871]:
+                - generic [ref=f13e872]:
+                  - generic [ref=f13e873]:
+                    - text: Amount
+                    - generic [ref=f13e874]:
+                      - generic: Rp
+                      - spinbutton "Amount" [active] [ref=f13e875]
+                    - paragraph
+                  - generic [ref=f13e876]:
+                    - text: Currency
+                    - combobox "Currency" [ref=f13e877]:
+                      - option "IDR" [selected]
+                      - option "USD"
+                      - option "SGD"
+                      - option "EUR"
+                      - option "JPY"
+                      - option "GBP"
+                      - option "AUD"
+                      - option "MYR"
+                      - option "PHP"
+                      - option "THB"
+                      - option "HKD"
+                      - option "CNY"
+                      - option "KRW"
+                      - option "SAR"
+                      - option "VND"
+                - generic [ref=f13e878]:
+                  - text: Date
+                  - textbox "Date" [ref=f13e880]: 2026-08-06
+                - generic [ref=f13e881]:
+                  - text: Merchant
+                  - textbox "Merchant" [ref=f13e882]:
+                    - /placeholder: Where did you spend?
+                - generic [ref=f13e883]:
+                  - text: Category
+                  - combobox "Category" [ref=f13e884]:
+                    - option "Select a category" [disabled] [selected]
+                    - option "Dining"
+                    - option "Entertainment"
+                    - option "Groceries"
+                    - option "Health"
+                    - option "Housing"
+                    - option "Other"
+                    - option "Shopping"
+                    - option "Subscriptions"
+                    - option "Transport"
+                    - option "Travel"
+                    - option "Utilities"
+                - generic [ref=f13e885]:
+                  - text: Notes (optional)
+                  - textbox "Notes (optional)" [ref=f13e886]:
+                    - /placeholder: Add a note...
+                - generic [ref=f13e887]:
+                  - button "Cancel" [ref=f13e888]
+                  - button "Save Expense" [ref=f13e889]
+        - generic [ref=f13e51]:
+          - generic [ref=f13e53]:
+            - paragraph [ref=f13e54]: Filters
+            - button "Collapse filters" [ref=f13e55]
+          - generic [ref=f13e60]:
+            - generic [ref=f13e61]:
+              - text: Date range
+              - generic [ref=f13e62]:
+                - textbox [ref=f13e65]
+                - generic [ref=f13e66]: to
+                - textbox [ref=f13e69]
+            - generic [ref=f13e70]:
+              - text: Category
+              - button "All categories" [ref=f13e72]
+            - generic [ref=f13e76]:
+              - text: Merchant
+              - textbox "Search merchant..." [ref=f13e78]
+        - generic [ref=f13e79]:
+          - generic [ref=f13e81]:
+            - paragraph [ref=f13e109]: 20 expenses
+            - generic [ref=f13e111]:
+              - generic [ref=f13e116]:
+                - generic [ref=f13e117]:
+                  - generic [ref=f13e118]:
+                    - paragraph [ref=f13e119]: Daring Deli
+                    - generic [ref=f13e120]:
+                      - generic [ref=f13e121]: Dining
+                      - generic [ref=f13e122]: ·
+                      - generic [ref=f13e123]: Yesterday
+                      - generic [ref=f13e124]: ·
+                      - generic [ref=f13e125]: "4"
+                  - generic [ref=f13e132]:
+                    - generic [ref=f13e133]: Rp 438.900
+                    - generic [ref=f13e134]: Rp 136.967
+                - generic [ref=f13e136]:
+                  - generic [ref=f13e137]:
+                    - generic [ref=f13e143]: Split (3)
+                    - generic [ref=f13e144]: ·
+                    - generic [ref=f13e145]: by-item
+                    - generic [ref=f13e146]: ·
+                    - button "Details" [ref=f13e147]
+                  - generic [ref=f13e150]:
+                    - generic [ref=f13e151]:
+                      - generic [ref=f13e152]:
+                        - button [ref=f13e153]
+                        - generic [ref=f13e156]: You
+                      - generic [ref=f13e157]: Rp 136.967
+                    - generic [ref=f13e158]:
+                      - generic [ref=f13e159]:
+                        - button [ref=f13e160]
+                        - generic [ref=f13e164]: William
+                      - generic [ref=f13e165]: Rp 157.967
+                    - generic [ref=f13e166]:
+                      - generic [ref=f13e167]:
+                        - button [ref=f13e168]
+                        - generic [ref=f13e172]: Claudia
+                      - generic [ref=f13e173]: Rp 143.967
+              - button "Expense actions" [ref=f13e175]
+            - generic [ref=f13e181]:
+              - generic [ref=f13e186]:
+                - generic [ref=f13e187]:
+                  - generic [ref=f13e188]:
+                    - paragraph [ref=f13e189]: Five Monkeys Burgers - Margo
+                    - generic [ref=f13e190]:
+                      - generic [ref=f13e191]: Dining
+                      - generic [ref=f13e192]: ·
+                      - generic [ref=f13e193]: Aug 1
+                      - generic [ref=f13e194]: ·
+                      - generic [ref=f13e195]: "3"
+                  - generic [ref=f13e202]:
+                    - generic [ref=f13e203]: Rp 334.356
+                    - generic [ref=f13e204]: Rp 169.178
+                - generic [ref=f13e206]:
+                  - generic [ref=f13e207]:
+                    - generic [ref=f13e213]: Split (2)
+                    - generic [ref=f13e214]: ·
+                    - generic [ref=f13e215]: by-item
+                    - generic [ref=f13e216]: ·
+                    - button "Details" [ref=f13e217]
+                  - generic [ref=f13e220]:
+                    - generic [ref=f13e221]:
+                      - generic [ref=f13e222]:
+                        - button [ref=f13e223]
+                        - generic [ref=f13e226]: You
+                      - generic [ref=f13e227]: Rp 169.178
+                    - generic [ref=f13e228]:
+                      - generic [ref=f13e229]:
+                        - button [ref=f13e230]
+                        - generic [ref=f13e233]: Kayzaa Nuur Azuraa
+                      - generic [ref=f13e234]: Rp 165.178
+              - button "Expense actions" [ref=f13e236]
+            - generic [ref=f13e242]:
+              - generic [ref=f13e247]:
+                - generic [ref=f13e248]:
+                  - generic [ref=f13e249]:
+                    - paragraph [ref=f13e250]: LAWLESS BURGERBAR
+                    - generic [ref=f13e251]:
+                      - generic [ref=f13e252]: Dining
+                      - generic [ref=f13e253]: ·
+                      - generic [ref=f13e254]: Jul 26
+                      - generic [ref=f13e255]: ·
+                      - generic [ref=f13e256]: "5"
+                  - generic [ref=f13e263]:
+                    - generic [ref=f13e264]: Rp 341.500
+                    - generic [ref=f13e265]: Rp 75.125
+                - generic [ref=f13e267]:
+                  - generic [ref=f13e268]:
+                    - generic [ref=f13e274]: Split (4)
+                    - generic [ref=f13e275]: ·
+                    - generic [ref=f13e276]: by-item
+                    - generic [ref=f13e277]: ·
+                    - button "Details" [ref=f13e278]
+                  - generic [ref=f13e281]:
+                    - generic [ref=f13e282]:
+                      - generic [ref=f13e283]:
+                        - button [ref=f13e284]
+                        - generic [ref=f13e287]: You
+                      - generic [ref=f13e288]: Rp 75.125
+                    - generic [ref=f13e289]:
+                      - generic [ref=f13e290]:
+                        - button [ref=f13e291]
+                        - generic [ref=f13e294]: Dad
+                      - generic [ref=f13e295]: Rp 80.625
+                    - generic [ref=f13e296]:
+                      - generic [ref=f13e297]:
+                        - button [ref=f13e298]
+                        - generic [ref=f13e301]: Mom
+                      - generic [ref=f13e302]: Rp 80.625
+                    - generic [ref=f13e303]:
+                      - generic [ref=f13e304]:
+                        - button [ref=f13e305]
+                        - generic [ref=f13e308]: Mishel
+                      - generic [ref=f13e309]: Rp 105.125
+              - button "Expense actions" [ref=f13e311]
+            - generic [ref=f13e317]:
+              - generic [ref=f13e322]:
+                - generic [ref=f13e323]:
+                  - generic [ref=f13e324]:
+                    - paragraph [ref=f13e325]: KARUBI MARU JAPANESE GRILLED BEEF
+                    - generic [ref=f13e326]:
+                      - generic [ref=f13e327]: Dining
+                      - generic [ref=f13e328]: ·
+                      - generic [ref=f13e329]: Jul 26
+                      - generic [ref=f13e330]: ·
+                      - generic [ref=f13e331]: "3"
+                  - generic [ref=f13e338]:
+                    - generic [ref=f13e339]: Rp 165.000
+                    - generic [ref=f13e340]: Rp 84.000
+                - generic [ref=f13e342]:
+                  - generic [ref=f13e343]:
+                    - generic [ref=f13e349]: Split (2)
+                    - generic [ref=f13e350]: ·
+                    - generic [ref=f13e351]: by-item
+                    - generic [ref=f13e352]: ·
+                    - button "Details" [ref=f13e353]
+                  - generic [ref=f13e356]:
+                    - generic [ref=f13e357]:
+                      - generic [ref=f13e358]:
+                        - button [ref=f13e359]
+                        - generic [ref=f13e362]: You
+                      - generic [ref=f13e363]: Rp 84.000
+                    - generic [ref=f13e364]:
+                      - generic [ref=f13e365]:
+                        - button [ref=f13e366]
+                        - generic [ref=f13e369]: Kayzaa Nuur Azuraa
+                      - generic [ref=f13e370]: Rp 81.000
+              - button "Expense actions" [ref=f13e372]
+            - generic [ref=f13e378]:
+              - generic [ref=f13e385]:
+                - generic [ref=f13e386]:
+                  - paragraph [ref=f13e387]: Grab
+                  - generic [ref=f13e388]:
+                    - generic [ref=f13e389]: Transport
+                    - generic [ref=f13e390]: ·
+                    - generic [ref=f13e391]: Jul 9
+                - paragraph [ref=f13e393]: "-Rp 47.000"
+              - button "Expense actions" [ref=f13e395]
+            - generic [ref=f13e401]:
+              - generic [ref=f13e407]:
+                - generic [ref=f13e408]:
+                  - paragraph [ref=f13e409]: Lunch
+                  - generic [ref=f13e410]:
+                    - generic [ref=f13e411]: Dining
+                    - generic [ref=f13e412]: ·
+                    - generic [ref=f13e413]: Jul 9
+                - paragraph [ref=f13e415]: "-Rp 29.000"
+              - button "Expense actions" [ref=f13e417]
+            - generic [ref=f13e423]:
+              - generic [ref=f13e430]:
+                - generic [ref=f13e431]:
+                  - paragraph [ref=f13e432]: Grab
+                  - generic [ref=f13e433]:
+                    - generic [ref=f13e434]: Transport
+                    - generic [ref=f13e435]: ·
+                    - generic [ref=f13e436]: Jul 8
+                    - generic [ref=f13e437]: ·
+                    - generic [ref=f13e438]: Grab to Pasming
+                - paragraph [ref=f13e440]: "-Rp 9.000"
+              - button "Expense actions" [ref=f13e442]
+            - generic [ref=f13e448]:
+              - generic [ref=f13e455]:
+                - generic [ref=f13e456]:
+                  - paragraph [ref=f13e457]: Grab
+                  - generic [ref=f13e458]:
+                    - generic [ref=f13e459]: Transport
+                    - generic [ref=f13e460]: ·
+                    - generic [ref=f13e461]: Jul 8
+                    - generic [ref=f13e462]: ·
+                    - generic [ref=f13e463]: Grab to Office
+                - paragraph [ref=f13e465]: "-Rp 13.000"
+              - button "Expense actions" [ref=f13e467]
+            - generic [ref=f13e473]:
+              - generic [ref=f13e479]:
+                - generic [ref=f13e480]:
+                  - paragraph [ref=f13e481]: Lunch
+                  - generic [ref=f13e482]:
+                    - generic [ref=f13e483]: Dining
+                    - generic [ref=f13e484]: ·
+                    - generic [ref=f13e485]: Jul 8
+                    - generic [ref=f13e486]: ·
+                    - generic [ref=f13e487]: Nasi Padang
+                - paragraph [ref=f13e489]: "-Rp 35.000"
+              - button "Expense actions" [ref=f13e491]
+            - generic [ref=f13e497]:
+              - generic [ref=f13e504]:
+                - generic [ref=f13e505]:
+                  - paragraph [ref=f13e506]: KRL
+                  - generic [ref=f13e507]:
+                    - generic [ref=f13e508]: Transport
+                    - generic [ref=f13e509]: ·
+                    - generic [ref=f13e510]: Jul 8
+                - paragraph [ref=f13e512]: "-Rp 6.000"
+              - button "Expense actions" [ref=f13e514]
+            - generic [ref=f13e520]:
+              - generic [ref=f13e527]:
+                - generic [ref=f13e528]:
+                  - paragraph [ref=f13e529]: MRT
+                  - generic [ref=f13e530]:
+                    - generic [ref=f13e531]: Transport
+                    - generic [ref=f13e532]: ·
+                    - generic [ref=f13e533]: Jul 8
+                - paragraph [ref=f13e535]: "-Rp 5.000"
+              - button "Expense actions" [ref=f13e537]
+            - generic [ref=f13e543]:
+              - generic [ref=f13e550]:
+                - generic [ref=f13e551]:
+                  - paragraph [ref=f13e552]: Grab
+                  - generic [ref=f13e553]:
+                    - generic [ref=f13e554]: Transport
+                    - generic [ref=f13e555]: ·
+                    - generic [ref=f13e556]: Jul 8
+                    - generic [ref=f13e557]: ·
+                    - generic [ref=f13e558]: Grab Home
+                - paragraph [ref=f13e560]: "-Rp 9.000"
+              - button "Expense actions" [ref=f13e562]
+            - generic [ref=f13e568]:
+              - generic [ref=f13e574]:
+                - generic [ref=f13e575]:
+                  - paragraph [ref=f13e576]: Dinner in Sudirman
+                  - generic [ref=f13e577]:
+                    - generic [ref=f13e578]: Dining
+                    - generic [ref=f13e579]: ·
+                    - generic [ref=f13e580]: Jul 8
+                - paragraph [ref=f13e582]: "-Rp 44.000"
+              - button "Expense actions" [ref=f13e584]
+            - generic [ref=f13e590]:
+              - generic [ref=f13e596]:
+                - generic [ref=f13e597]:
+                  - paragraph [ref=f13e598]: Vilo
+                  - generic [ref=f13e599]:
+                    - generic [ref=f13e600]: Dining
+                    - generic [ref=f13e601]: ·
+                    - generic [ref=f13e602]: Jul 8
+                    - generic [ref=f13e603]: ·
+                    - generic [ref=f13e604]: Ice Cream w/ Kayzaa
+                - paragraph [ref=f13e606]: "-Rp 35.000"
+              - button "Expense actions" [ref=f13e608]
+            - generic [ref=f13e614]:
+              - generic [ref=f13e621]:
+                - generic [ref=f13e622]:
+                  - paragraph [ref=f13e623]: Grab
+                  - generic [ref=f13e624]:
+                    - generic [ref=f13e625]: Transport
+                    - generic [ref=f13e626]: ·
+                    - generic [ref=f13e627]: Jul 7
+                    - generic [ref=f13e628]: ·
+                    - generic [ref=f13e629]: Grab to Pasming
+                - paragraph [ref=f13e631]: "-Rp 9.000"
+              - button "Expense actions" [ref=f13e633]
+            - generic [ref=f13e639]:
+              - generic [ref=f13e646]:
+                - generic [ref=f13e647]:
+                  - paragraph [ref=f13e648]: Grab
+                  - generic [ref=f13e649]:
+                    - generic [ref=f13e650]: Transport
+                    - generic [ref=f13e651]: ·
+                    - generic [ref=f13e652]: Jul 7
+                    - generic [ref=f13e653]: ·
+                    - generic [ref=f13e654]: Grab from UI to Fasilkom
+                - paragraph [ref=f13e656]: "-Rp 9.000"
+              - button "Expense actions" [ref=f13e658]
+            - generic [ref=f13e664]:
+              - generic [ref=f13e670]:
+                - generic [ref=f13e671]:
+                  - paragraph [ref=f13e672]: Ayam Mas Roni
+                  - generic [ref=f13e673]:
+                    - generic [ref=f13e674]: Dining
+                    - generic [ref=f13e675]: ·
+                    - generic [ref=f13e676]: Jul 7
+                    - generic [ref=f13e677]: ·
+                    - generic [ref=f13e678]: Ayam Kremes
+                - paragraph [ref=f13e680]: "-Rp 24.000"
+              - button "Expense actions" [ref=f13e682]
+            - generic [ref=f13e688]:
+              - generic [ref=f13e694]:
+                - generic [ref=f13e695]:
+                  - paragraph [ref=f13e696]: Ovaltine
+                  - generic [ref=f13e697]:
+                    - generic [ref=f13e698]: Dining
+                    - generic [ref=f13e699]: ·
+                    - generic [ref=f13e700]: Jul 7
+                    - generic [ref=f13e701]: ·
+                    - generic [ref=f13e702]: Ovaltine Dingin
+                - paragraph [ref=f13e704]: "-Rp 7.000"
+              - button "Expense actions" [ref=f13e706]
+            - generic [ref=f13e712]:
+              - generic [ref=f13e719]:
+                - generic [ref=f13e720]:
+                  - paragraph [ref=f13e721]: Grab
+                  - generic [ref=f13e722]:
+                    - generic [ref=f13e723]: Transport
+                    - generic [ref=f13e724]: ·
+                    - generic [ref=f13e725]: Jul 7
+                    - generic [ref=f13e726]: ·
+                    - generic [ref=f13e727]: Grab From Pacil to St. UI
+                - paragraph [ref=f13e729]: "-Rp 9.000"
+              - button "Expense actions" [ref=f13e731]
+            - generic [ref=f13e737]:
+              - generic [ref=f13e744]:
+                - generic [ref=f13e745]:
+                  - paragraph [ref=f13e746]: Grab
+                  - generic [ref=f13e747]:
+                    - generic [ref=f13e748]: Transport
+                    - generic [ref=f13e749]: ·
+                    - generic [ref=f13e750]: Jul 7
+                    - generic [ref=f13e751]: ·
+                    - generic [ref=f13e752]: Grab From St. Tebet to Kokas
+                - paragraph [ref=f13e754]: "-Rp 11.100"
+              - button "Expense actions" [ref=f13e756]
+          - generic [ref=f13e89]:
+            - generic [ref=f13e90]:
+              - heading "Summary" [level=2] [ref=f13e91]
+              - tablist [ref=f13e93]:
+                - tab "Daily" [selected] [ref=f13e94]
+                - tab "Weekly" [ref=f13e95]
+                - tab "Monthly" [ref=f13e96]
+            - generic [ref=f13e97]:
+              - generic [ref=f13e761]:
+                - generic [ref=f13e763]:
+                  - generic [ref=f13e766]: Yesterday
+                  - generic [ref=f13e767]: 1 expense
+                - paragraph [ref=f13e771]: Rp 136.967
+              - generic [ref=f13e772]:
+                - generic [ref=f13e774]:
+                  - generic [ref=f13e777]: Aug 1
+                  - generic [ref=f13e778]: 1 expense
+                - paragraph [ref=f13e782]: Rp 169.178
+              - generic [ref=f13e783]:
+                - generic [ref=f13e785]:
+                  - generic [ref=f13e788]: Jul 26
+                  - generic [ref=f13e789]: 2 expenses
+                - paragraph [ref=f13e793]: Rp 159.125
+              - generic [ref=f13e794]:
+                - generic [ref=f13e796]:
+                  - generic [ref=f13e799]: Jul 9
+                  - generic [ref=f13e800]: 2 expenses
+                - paragraph [ref=f13e804]: Rp 76.000
+              - generic [ref=f13e805]:
+                - generic [ref=f13e807]:
+                  - generic [ref=f13e810]: Jul 8
+                  - generic [ref=f13e811]: 8 expenses
+                - paragraph [ref=f13e815]: Rp 156.000
+              - generic [ref=f13e816]:
+                - generic [ref=f13e818]:
+                  - generic [ref=f13e821]: Jul 7
+                  - generic [ref=f13e822]: 6 expenses
+                - paragraph [ref=f13e826]: Rp 69.100
+        - button "Add Expense" [ref=f13e99]
+  - button "Open Next.js Dev Tools" [ref=f13e105] [cursor=pointer]
+  - alert [ref=f13e827]

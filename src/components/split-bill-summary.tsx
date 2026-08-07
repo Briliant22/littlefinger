@@ -16,6 +16,11 @@ export function SplitBillSummary({
 }) {
   const [participants, setParticipants] = useState(split.participants);
   const [toggling, setToggling] = useState<string | null>(null);
+  const [mirroredSplit, setMirroredSplit] = useState(split.participants);
+  if (mirroredSplit !== split.participants) {
+    setMirroredSplit(split.participants);
+    setParticipants(split.participants);
+  }
 
   async function handleTogglePay(participant: BillParticipant) {
     setToggling(participant.id);

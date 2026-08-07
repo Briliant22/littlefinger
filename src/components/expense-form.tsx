@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Plus, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DateInput } from "@/components/ui/date-input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import {
@@ -180,10 +181,9 @@ export function ExpenseForm({
 
           <div className="space-y-2">
             <Label htmlFor="date">Date</Label>
-            <Input
+            <DateInput
               id="date"
               name="date"
-              type="date"
               defaultValue={expense?.date?.split("T")[0] || today}
               required
             />
